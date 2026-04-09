@@ -6,3 +6,6 @@ BackEnd/BatteryAdvisor.HA/bin
 BackEnd/BatteryAdvisor.HA/obj
 BackEnd/BatteryAdvisor.Tests/bin
 BackEnd/BatteryAdvisor.Tests/obj
+
+Frontend/node_modules
+Frontend/dist
