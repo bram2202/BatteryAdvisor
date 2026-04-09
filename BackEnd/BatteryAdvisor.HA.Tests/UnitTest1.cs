@@ -1,4 +1,4 @@
-﻿namespace BatteryAdvisor.Tests;
+﻿namespace BatteryAdvisor.HA.Tests;
 
 public class UnitTest1
 {

@@ -1,11 +1,16 @@
 BackEnd/BatteryAdvisor.Api/bin
 BackEnd/BatteryAdvisor.Api/obj
+BackEnd/BatteryAdvisor.Api.Tests/obj
+BackEnd/BatteryAdvisor.Api.Tests/bin
 BackEnd/BatteryAdvisor.Core/bin
 BackEnd/BatteryAdvisor.Core/obj
+BackEnd/BatteryAdvisor.Core.Tests/obj
+BackEnd/BatteryAdvisor.Core.Tests/bin
 BackEnd/BatteryAdvisor.HA/bin
 BackEnd/BatteryAdvisor.HA/obj
-BackEnd/BatteryAdvisor.Tests/bin
-BackEnd/BatteryAdvisor.Tests/obj
+BackEnd/BatteryAdvisor.HA.Tests/bin
+BackEnd/BatteryAdvisor.HA.Tests/obj
+
 
 Frontend/node_modules
 Frontend/dist
