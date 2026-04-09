@@ -1,5 +1,8 @@
 # Battery Advisor
 
+**work in progress**
+
+
 BatteryAdvisor helps homeowners decide whether investing in a home battery is financially worthwhile. 
 
 It connects to a local Home Assistant instance to retrieve real energy consumption and solar (PV) generation data, and uses that data to simulate different battery scenarios.
