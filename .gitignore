@@ -1,0 +1,8 @@
+BackEnd/BatteryAdvisor.Api/bin
+BackEnd/BatteryAdvisor.Api/obj
+BackEnd/BatteryAdvisor.Core/bin
+BackEnd/BatteryAdvisor.Core/obj
+BackEnd/BatteryAdvisor.HA/bin
+BackEnd/BatteryAdvisor.HA/obj
+BackEnd/BatteryAdvisor.Tests/bin
+BackEnd/BatteryAdvisor.Tests/obj

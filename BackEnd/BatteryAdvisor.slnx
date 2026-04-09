@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BatteryAdvisor.Api/BatteryAdvisor.Api.csproj" />
+  <Project Path="BatteryAdvisor.Core/BatteryAdvisor.Core.csproj" />
+  <Project Path="BatteryAdvisor.HA/BatteryAdvisor.HA.csproj" />
+  <Project Path="BatteryAdvisor.Tests/BatteryAdvisor.Tests.csproj" />
+</Solution>
