@@ -13,11 +13,11 @@ Configure battery capacity, purchase price, and your local energy tariff to see 
 # Development
 ## Backend
 
-An C# .net core 10 backend with REST API.
+A C# .net10 backend with REST API.
 
 How to start:
 ```
-cd BatteryAdvisor.Api
+cd BatteryAdvisor.Host
 dotnet run
 ```
 
@@ -34,7 +34,7 @@ dotnet test BatteryAdvisor.slnx
 
 ## Frontend
 
-An Angular 21 application using TailwindCSS and PrimeNG
+A Angular 21 application using TailwindCSS and PrimeNG
 
 How to start:
 ```

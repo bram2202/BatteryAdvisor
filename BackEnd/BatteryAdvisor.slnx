@@ -5,4 +5,6 @@
   <Project Path="BatteryAdvisor.Core.Tests/BatteryAdvisor.Core.Tests.csproj" />
   <Project Path="BatteryAdvisor.HA/BatteryAdvisor.HA.csproj" />
   <Project Path="BatteryAdvisor.HA.Tests/BatteryAdvisor.HA.Tests.csproj" />
+  <Project Path="BatteryAdvisor.Host/BatteryAdvisor.Host.csproj" />
+  <Project Path="BatteryAdvisor.Host.Tests/BatteryAdvisor.Host.Tests.csproj" />
 </Solution>

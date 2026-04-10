@@ -10,7 +10,10 @@ BackEnd/BatteryAdvisor.HA/bin
 BackEnd/BatteryAdvisor.HA/obj
 BackEnd/BatteryAdvisor.HA.Tests/bin
 BackEnd/BatteryAdvisor.HA.Tests/obj
-
+BackEnd/BatteryAdvisor.Host/bin
+BackEnd/BatteryAdvisor.Host/obj
+BackEnd/BatteryAdvisor.Host.Tests/bin
+BackEnd/BatteryAdvisor.Host.Tests/obj
 
 Frontend/node_modules
 Frontend/dist
