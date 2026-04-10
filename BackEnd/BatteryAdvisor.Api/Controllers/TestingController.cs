@@ -7,11 +7,13 @@ namespace BatteryAdvisor.Api.Controllers;
 [Route("[controller]")]
 public class TestingController : ControllerBase
 {
-    private readonly RestClient _homeAssistantRestClient;
+    private readonly IRestClient _homeAssistantRestClient;
+    private readonly IWebSocketClient _homeAssistantWebSocketClient;
 
-    public TestingController(RestClient homeAssistantRestClient)
+    public TestingController(IRestClient homeAssistantRestClient, IWebSocketClient homeAssistantWebSocketClient)
     {
         _homeAssistantRestClient = homeAssistantRestClient;
+        _homeAssistantWebSocketClient = homeAssistantWebSocketClient;
     }
 
 
@@ -20,5 +22,12 @@ public class TestingController : ControllerBase
     {
         await _homeAssistantRestClient.GetData();
         return Ok("Run completed");
+    }
+
+    [HttpGet("ws")]
+    public async Task<IActionResult> RunWebSocket()
+    {
+        var result = await _homeAssistantWebSocketClient.GetStatisticIds();
+        return Ok(result);
     }
 }
