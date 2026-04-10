@@ -9,8 +9,11 @@ public static class ApiModuleExtensions
     {
         services.AddOpenApi();
         services.AddControllers();
-        services.AddHttpClient<IHttpClientService, HttpClientService>();
-        services.AddScoped<IApiClient, ApiClient>();
+        services.AddHttpClient<IHttpClientService, HttpClientService>((serviceProvider, httpClient) =>
+        {
+            httpClient.Timeout = TimeSpan.FromSeconds(30);
+        });
+        services.AddScoped<IRestClient, RestClient>();
         return services;
     }
 
@@ -27,5 +30,5 @@ public static class ApiModuleExtensions
         return app;
     }
 
- 
+
 }

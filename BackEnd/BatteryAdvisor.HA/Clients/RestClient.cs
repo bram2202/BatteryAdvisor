@@ -4,17 +4,18 @@ using Microsoft.Extensions.Options;
 
 namespace BatteryAdvisor.HA.Clients;
 
-public class ApiClient : IApiClient
+public class RestClient : IRestClient
 {
     private readonly IHttpClientService _httpClientService;
     private readonly ApplicationOptions _options;
 
-    public ApiClient(IHttpClientService httpClientService,
+    public RestClient(IHttpClientService httpClientService,
         IOptions<ApplicationOptions> options)
     {
         _httpClientService = httpClientService;
         _options = options.Value;
     }
+    
     public async Task GetData()
     {
         // !! For testing purposes only !!

@@ -1,6 +1,6 @@
 namespace BatteryAdvisor.HA.Clients;
 
-public interface IApiClient
+public interface IRestClient
 {
     Task GetData();
 }

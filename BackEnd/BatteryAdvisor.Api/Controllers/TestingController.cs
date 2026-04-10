@@ -7,17 +7,18 @@ namespace BatteryAdvisor.Api.Controllers;
 [Route("[controller]")]
 public class TestingController : ControllerBase
 {
-    private readonly IApiClient _apiClient;
+    private readonly RestClient _homeAssistantRestClient;
 
-    public TestingController(IApiClient apiClient)
+    public TestingController(RestClient homeAssistantRestClient)
     {
-        _apiClient = apiClient;
+        _homeAssistantRestClient = homeAssistantRestClient;
     }
+
 
     [HttpGet("run")]
     public async Task<IActionResult> Run()
     {
-        await _apiClient.GetData();
+        await _homeAssistantRestClient.GetData();
         return Ok("Run completed");
     }
 }

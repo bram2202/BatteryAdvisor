@@ -17,3 +17,5 @@ BackEnd/BatteryAdvisor.Host.Tests/obj
 
 Frontend/node_modules
 Frontend/dist
+
+BackEnd/BatteryAdvisor.Host/config/appsettings.Local.json
