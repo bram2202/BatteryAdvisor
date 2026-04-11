@@ -1,44 +1,99 @@
 using BatteryAdvisor.Core.ApplicationOptions;
 using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.Core.Services;
+using BatteryAdvisor.HA.Helpers;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Net.WebSockets;
 
 namespace BatteryAdvisor.HA.Clients;
 
 public class WebSocketClient : IWebSocketClient
 {
-    private readonly IWebSocketService _webSocketService = new WebSocketService();
+    private readonly IWebSocketService _webSocketService;
     private readonly ApplicationOptions _options;
 
-    private ClientWebSocket? _socket;
+    private readonly ILogger<WebSocketClient> _logger;
 
-    public WebSocketClient(IOptions<ApplicationOptions> options)
+    private bool _isLoggedIn = false;
+    private int _messageIdCounter = 1;
+
+    public WebSocketClient(
+        IWebSocketService webSocketService,
+        IOptions<ApplicationOptions> options,
+        ILogger<WebSocketClient> logger)
     {
+        _webSocketService = webSocketService;
+        _logger = logger;
         _options = options.Value;
     }
 
     public async Task<StaticIdModel[]> GetStatisticIds()
     {
+        _logger.LogDebug("Starting statistics ID retrieval from Home Assistant.");
+
+        // Step 1: Ensure we have a connected WebSocket
         await EnsureConnectedAsync(CancellationToken.None);
 
-        // TODO: Implement logic the send msg and wait for response
-        // {
-        //   "id": 3,
-        //   "type": "recorder/list_statistic_ids",
-        //   "statistic_type": "sum"
-        // }
-        // ID is incremental
+        // Step 2: Authenticate if not already authenticated
+        if (!_isLoggedIn)
+        {
+            _logger.LogInformation("Authenticating WebSocket session with Home Assistant.");
+            await WebSocketAuthenticationHelper.AuthenticateAsync(
+                _webSocketService,
+                _options.HomeAssistant.Token,
+                CancellationToken.None);
 
-        return [];
+            _isLoggedIn = true;
+        }
+
+        // Step 3: Send the list statistic IDs request
+        var messageId = _messageIdCounter++;
+        _logger.LogDebug("Sending list statistic IDs request with message id {MessageId}.", messageId);
+        var listStatisticIdsMessage = WebSocketMessageHelper.BuildListStatisticIdsMessage(messageId);
+        await SendMessageAsync(listStatisticIdsMessage, CancellationToken.None);
+
+        // Step 4 & 5: Wait for the response with the matching message ID and parse the result
+        var models = await HomeAssistantWebSocketResponseHelper.ReceiveForMessageIdAsync<StaticIdModel[]>(
+            _webSocketService,
+            messageId,
+            CancellationToken.None);
+
+        _logger.LogInformation("Received {Count} statistic IDs from Home Assistant.", models.Length);
+
+        return models;
+
     }
 
+    /// <summary>
+    /// Sends a message through the WebSocket connection. 
+    /// This method also increments the internal message ID counter for tracking requests and responses.
+    /// </summary>
+    /// <param name="message">The message to send through the WebSocket.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    private async Task SendMessageAsync(string message, CancellationToken cancellationToken)
+    {
+        await _webSocketService.SendAsync(message, cancellationToken);
+        this._messageIdCounter++; // Increment the message ID counter for the next message
+    }
+
+    /// <summary>
+    /// Ensures that there is an active WebSocket connection to Home Assistant. 
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     private async Task EnsureConnectedAsync(CancellationToken cancellationToken)
     {
         var websocketUrl = BuildHomeAssistantWebSocketUrl(_options.HomeAssistant.Url);
-        _socket = await _webSocketService.GetOrConnectAsync(websocketUrl, cancellationToken);
+
+        _logger.LogDebug("Ensuring WebSocket connection to Home Assistant at {WebSocketUrl}.", websocketUrl);
+
+        await _webSocketService.GetOrConnectAsync(websocketUrl, cancellationToken);
     }
 
+    /// <summary>
+    /// Builds the WebSocket URL for connecting to Home Assistant based on the provided base URL.   
+    /// </summary>
+    /// <param name="homeAssistantUrl">The base URL of the Home Assistant instance.</param>
+    /// <returns>The WebSocket URL for connecting to Home Assistant.</returns>
     private static string BuildHomeAssistantWebSocketUrl(string homeAssistantUrl)
     {
         var baseUri = new Uri(homeAssistantUrl, UriKind.Absolute);

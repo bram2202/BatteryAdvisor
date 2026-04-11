@@ -21,6 +21,7 @@ builder.Services.AddBatteryAdvisorApi();
 
 builder.Services.AddScoped<IRestClient, RestClient>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
+builder.Services.AddSingleton<IWebSocketService, WebSocketService>();
 
 builder.Services.AddSingleton<IWebSocketClient, WebSocketClient>();
 
