@@ -9,4 +9,5 @@ public class HomeAssistantOptions
 {
     public string Url { get; set; } = string.Empty;
     public string Token { get; set; } = string.Empty;
+    public int WebSocketResponseTimeoutSeconds { get; set; } = 10;
 }

@@ -2,6 +2,8 @@ using BatteryAdvisor.Api;
 using BatteryAdvisor.Core.ApplicationOptions;
 using BatteryAdvisor.Core.Services;
 using BatteryAdvisor.HA.Clients;
+using BatteryAdvisor.HA.Helpers;
+using BatteryAdvisor.HA.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,8 @@ builder.Services.AddBatteryAdvisorApi();
 builder.Services.AddScoped<IRestClient, RestClient>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 builder.Services.AddSingleton<IWebSocketService, WebSocketService>();
+builder.Services.AddSingleton<IHomeAssistantWebSocketResponseService, HomeAssistantWebSocketResponseService>();
+builder.Services.AddSingleton<IWebSocketAuthenticationService, WebSocketAuthenticationService>();
 
 builder.Services.AddSingleton<IWebSocketClient, WebSocketClient>();
 

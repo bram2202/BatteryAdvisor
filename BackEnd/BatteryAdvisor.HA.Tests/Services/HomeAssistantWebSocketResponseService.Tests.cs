@@ -1,11 +1,11 @@
 using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.Core.Services;
-using BatteryAdvisor.HA.Helpers;
+using BatteryAdvisor.HA.Services;
 using System.Net.WebSockets;
 
 namespace BatteryAdvisor.HA.Tests;
 
-public class HomeAssistantWebSocketResponseHelperTests
+public class HomeAssistantWebSocketResponseServiceTests
 {
     [Fact]
     public async Task ReceiveForMessageIdAsync_ParsesResultArrayToStaticIdModelArray()
@@ -43,9 +43,10 @@ public class HomeAssistantWebSocketResponseHelperTests
         """;
 
         var webSocketService = new FakeWebSocketService(response);
+        var helper = new HomeAssistantWebSocketResponseService(webSocketService);
 
-        var result = await HomeAssistantWebSocketResponseHelper
-            .ReceiveForMessageIdAsync<StaticIdModel[]>(webSocketService, 1, CancellationToken.None);
+        var result = await helper
+            .ReceiveForMessageIdAsync<StaticIdModel[]>(1, CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal(2, result.Length);

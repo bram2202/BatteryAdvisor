@@ -2,6 +2,7 @@ using BatteryAdvisor.Core.ApplicationOptions;
 using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.Core.Services;
 using BatteryAdvisor.HA.Helpers;
+using BatteryAdvisor.HA.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -10,6 +11,9 @@ namespace BatteryAdvisor.HA.Clients;
 public class WebSocketClient : IWebSocketClient
 {
     private readonly IWebSocketService _webSocketService;
+    private readonly IHomeAssistantWebSocketResponseService _webSocketResponseService;
+    private readonly IWebSocketAuthenticationService _webSocketAuthenticationService;
+
     private readonly ApplicationOptions _options;
 
     private readonly ILogger<WebSocketClient> _logger;
@@ -19,10 +23,14 @@ public class WebSocketClient : IWebSocketClient
 
     public WebSocketClient(
         IWebSocketService webSocketService,
+        IHomeAssistantWebSocketResponseService webSocketResponseService,
+        IWebSocketAuthenticationService webSocketAuthenticationService,
         IOptions<ApplicationOptions> options,
         ILogger<WebSocketClient> logger)
     {
         _webSocketService = webSocketService;
+        _webSocketResponseService = webSocketResponseService;
+        _webSocketAuthenticationService = webSocketAuthenticationService;
         _logger = logger;
         _options = options.Value;
     }
@@ -38,8 +46,7 @@ public class WebSocketClient : IWebSocketClient
         if (!_isLoggedIn)
         {
             _logger.LogInformation("Authenticating WebSocket session with Home Assistant.");
-            await WebSocketAuthenticationHelper.AuthenticateAsync(
-                _webSocketService,
+            await _webSocketAuthenticationService.AuthenticateAsync(
                 _options.HomeAssistant.Token,
                 CancellationToken.None);
 
@@ -53,8 +60,7 @@ public class WebSocketClient : IWebSocketClient
         await SendMessageAsync(listStatisticIdsMessage, CancellationToken.None);
 
         // Step 4 & 5: Wait for the response with the matching message ID and parse the result
-        var models = await HomeAssistantWebSocketResponseHelper.ReceiveForMessageIdAsync<StaticIdModel[]>(
-            _webSocketService,
+        var models = await _webSocketResponseService.ReceiveForMessageIdAsync<StaticIdModel[]>(
             messageId,
             CancellationToken.None);
 

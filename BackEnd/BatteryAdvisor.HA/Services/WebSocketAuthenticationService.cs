@@ -1,38 +1,56 @@
 using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.Core.Services;
+using BatteryAdvisor.HA.Services;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using BatteryAdvisor.Core.ApplicationOptions;
 
 namespace BatteryAdvisor.HA.Helpers;
 
-public static class WebSocketAuthenticationHelper
+public class WebSocketAuthenticationService : IWebSocketAuthenticationService
 {
-    public static async Task AuthenticateAsync(
+    private readonly IWebSocketService _webSocketService;
+    private readonly ApplicationOptions _options;
+
+    private readonly ILogger<WebSocketAuthenticationService> _logger;
+
+    public WebSocketAuthenticationService(
         IWebSocketService webSocketService,
+        IOptions<ApplicationOptions> options,
+        ILogger<WebSocketAuthenticationService> logger
+    )
+    {
+        _webSocketService = webSocketService;
+        _options = options.Value;
+        _logger = logger;
+
+    }
+
+    public async Task AuthenticateAsync(
         string accessToken,
         CancellationToken cancellationToken)
     {
         var authMessage = WebSocketMessageHelper.BuildAuthMessage(accessToken);
-        await webSocketService.SendAsync(authMessage, cancellationToken);
-        await WaitForSuccessfulAuthAsync(webSocketService, cancellationToken);
+        await this._webSocketService.SendAsync(authMessage, cancellationToken);
+        await WaitForSuccessfulAuthAsync(cancellationToken);
     }
 
     /// <summary>
     /// Waits for a successful authentication response from Home Assistant after sending the authentication message.
     /// </summary>
-    /// <param name="webSocketService">The WebSocket service used to receive messages.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when authentication fails.</exception>
-    private static async Task WaitForSuccessfulAuthAsync(
-        IWebSocketService webSocketService,
+    private async Task WaitForSuccessfulAuthAsync(
         CancellationToken cancellationToken)
     {
-        using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+        var timeout = TimeSpan.FromSeconds(_options.HomeAssistant.WebSocketResponseTimeoutSeconds);
+        using var timeoutCts = new CancellationTokenSource(timeout);
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
 
         while (true)
         {
-            var response = await webSocketService.ReceiveAsync(linkedCts.Token);
+            var response = await _webSocketService.ReceiveAsync(linkedCts.Token);
 
             var authenticationResponse = JsonSerializer.Deserialize<AuthenticationResponse>(response);
 
