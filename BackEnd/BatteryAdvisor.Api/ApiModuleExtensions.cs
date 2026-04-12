@@ -24,7 +24,11 @@ public static class ApiModuleExtensions
             app.MapOpenApi();
         }
 
-        app.UseHttpsRedirection();
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseHttpsRedirection();
+        }
+
         app.MapControllers();
 
         return app;
