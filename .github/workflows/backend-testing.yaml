@@ -1,0 +1,66 @@
+name: Backend Testing
+
+on:
+  push:
+
+permissions:
+  contents: read
+  checks: write
+  pages: write
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+
+      - name: Install dotnet-coverage
+        run: dotnet tool install --global dotnet-coverage
+
+      - name: Restore dependencies
+        working-directory: ./BackEnd
+        run: dotnet restore 
+
+      - name: Test with coverage
+        run: |
+          dotnet test ./BackEnd/BatteryAdvisor.slnx \
+            --logger "trx;LogFileName=test-results.trx" \
+            --collect:"XPlat Code Coverage" \
+            --settings ./BackEnd/coverage.runsettings \
+            --results-directory ./TestResults
+
+      - name: Upload raw test outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: TestResults
+
+      - name: Publish test report to GitHub Checks
+        if: always()
+        uses: dorny/test-reporter@v2
+        with:
+          name: .NET Tests
+          path: TestResults/**/*.trx
+          reporter: dotnet-trx
+
+      - name: Generate HTML report
+        run: |
+          dotnet tool install -g dotnet-reportgenerator-globaltool
+          reportgenerator \
+            -reports:"TestResults/**/coverage.cobertura.xml" \
+            -targetdir:"TestResults/report" \
+            -reporttypes:Html \
+            -filefilters:"-*.generated.cs"
+
+      - name: Upload report artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: TestResults/report

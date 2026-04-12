@@ -14,6 +14,7 @@ BackEnd/BatteryAdvisor.Host/bin
 BackEnd/BatteryAdvisor.Host/obj
 BackEnd/BatteryAdvisor.Host.Tests/bin
 BackEnd/BatteryAdvisor.Host.Tests/obj
+TestResults
 
 Frontend/node_modules
 Frontend/dist
