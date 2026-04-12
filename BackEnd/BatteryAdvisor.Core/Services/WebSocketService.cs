@@ -147,7 +147,7 @@ public class WebSocketService : IWebSocketService, IAsyncDisposable
             throw new InvalidOperationException("WebSocket is not connected.");
         }
 
-        _logger.LogDebug("Sending WebSocket message with {CharacterCount} characters.", message.Length);
+        _logger.LogDebug("Sending WebSocket message");
 
         var messageBuffer = System.Text.Encoding.UTF8.GetBytes(message);
         var segment = new ArraySegment<byte>(messageBuffer);

@@ -12,7 +12,6 @@ public class WebSocketAuthenticationService : IWebSocketAuthenticationService
 {
     private readonly IWebSocketService _webSocketService;
     private readonly ApplicationOptions _options;
-
     private readonly ILogger<WebSocketAuthenticationService> _logger;
 
     public WebSocketAuthenticationService(
@@ -31,6 +30,7 @@ public class WebSocketAuthenticationService : IWebSocketAuthenticationService
         string accessToken,
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Starting Home Assistant websocket authentication.");
         var authMessage = WebSocketMessageHelper.BuildAuthMessage(accessToken);
         await this._webSocketService.SendAsync(authMessage, cancellationToken);
         await WaitForSuccessfulAuthAsync(cancellationToken);
@@ -63,11 +63,13 @@ public class WebSocketAuthenticationService : IWebSocketAuthenticationService
 
             if (string.Equals(responseType, "auth_ok", StringComparison.OrdinalIgnoreCase))
             {
+                _logger.LogInformation("Home Assistant websocket authentication successful.");
                 return;
             }
 
             if (string.Equals(responseType, "auth_invalid", StringComparison.OrdinalIgnoreCase))
             {
+                _logger.LogWarning("Home Assistant websocket authentication failed: {Message}", authenticationResponse.message ?? "auth_invalid");
                 throw new InvalidOperationException(
                     $"Home Assistant websocket auth failed: {authenticationResponse.message ?? "auth_invalid"}");
             }

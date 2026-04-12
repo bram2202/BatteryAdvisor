@@ -1,6 +1,7 @@
 using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.Core.Services;
 using BatteryAdvisor.HA.Services;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Net.WebSockets;
 
 namespace BatteryAdvisor.HA.Tests;
@@ -43,7 +44,9 @@ public class HomeAssistantWebSocketResponseServiceTests
         """;
 
         var webSocketService = new FakeWebSocketService(response);
-        var helper = new HomeAssistantWebSocketResponseService(webSocketService);
+        var helper = new HomeAssistantWebSocketResponseService(
+            webSocketService,
+            NullLogger<HomeAssistantWebSocketResponseService>.Instance);
 
         var result = await helper
             .ReceiveForMessageIdAsync<StaticIdModel[]>(1, CancellationToken.None);

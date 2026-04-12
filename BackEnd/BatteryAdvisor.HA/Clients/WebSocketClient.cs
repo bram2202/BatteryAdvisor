@@ -72,14 +72,12 @@ public class WebSocketClient : IWebSocketClient
 
     /// <summary>
     /// Sends a message through the WebSocket connection. 
-    /// This method also increments the internal message ID counter for tracking requests and responses.
     /// </summary>
     /// <param name="message">The message to send through the WebSocket.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     private async Task SendMessageAsync(string message, CancellationToken cancellationToken)
     {
         await _webSocketService.SendAsync(message, cancellationToken);
-        this._messageIdCounter++; // Increment the message ID counter for the next message
     }
 
     /// <summary>

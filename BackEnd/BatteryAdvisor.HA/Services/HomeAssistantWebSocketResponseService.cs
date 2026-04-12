@@ -1,16 +1,23 @@
 using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.Core.Services;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace BatteryAdvisor.HA.Services;
 
 public class HomeAssistantWebSocketResponseService : IHomeAssistantWebSocketResponseService
 {
     private readonly IWebSocketService _webSocketService;
+    private readonly ILogger<HomeAssistantWebSocketResponseService> _logger;
 
-    public HomeAssistantWebSocketResponseService(IWebSocketService webSocketService)
+    public HomeAssistantWebSocketResponseService(
+        IWebSocketService webSocketService,
+        ILogger<HomeAssistantWebSocketResponseService> logger
+    )
     {
         _webSocketService = webSocketService;
+        _logger = logger;
     }
 
     public async Task<T> ReceiveForMessageIdAsync<T>(
@@ -61,10 +68,13 @@ public class HomeAssistantWebSocketResponseService : IHomeAssistantWebSocketResp
                             $"Failed to deserialize websocket message result to {typeof(T).Name}.");
                     }
 
+                    _logger.LogInformation("Received response for message ID {MessageId}:", messageId);
+
                     return result;
                 }
                 catch (JsonException ex)
                 {
+                    _logger.LogError(ex, "JSON deserialization error for message ID {MessageId}: {Message}", messageId, message);
                     throw new InvalidOperationException(
                         $"Failed to deserialize websocket message result to {typeof(T).Name}.",
                         ex);
