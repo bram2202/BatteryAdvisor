@@ -3,7 +3,7 @@
 ## Build Status
 
 [![Backend Testing](https://github.com/bram2202/BatteryAdvisor/actions/workflows/backend-testing.yaml/badge.svg)](https://github.com/bram2202/BatteryAdvisor/actions/workflows/backend-testing.yaml)
-[![Coverage](https://bram2202.github.io/BatteryAdvisor/badge_linecoverage.svg)](https://bram2202.github.io/BatteryAdvisor)
+
 
 **work in progress**
 
