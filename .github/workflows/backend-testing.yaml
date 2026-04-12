@@ -31,7 +31,7 @@ jobs:
       - name: Test with coverage
         run: |
           dotnet test ./BackEnd/BatteryAdvisor.slnx \
-            --logger "trx;LogFileName=test-results.trx" \
+            --logger "trx" \
             --collect:"XPlat Code Coverage" \
             --settings ./BackEnd/coverage.runsettings \
             --results-directory ./TestResults
