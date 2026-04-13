@@ -30,8 +30,8 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3
       primeng:
-        specifier: ^21.1.5
-        version: 21.1.5(e5d3b5d0c46fe6a0278f60ae0f6df260)
+        specifier: ^21.1.6
+        version: 21.1.6(e5d3b5d0c46fe6a0278f60ae0f6df260)
       rxjs:
         specifier: ~7.8.0
         version: 7.8.2
@@ -2385,8 +2385,8 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  primeng@21.1.5:
-    resolution: {integrity: sha512-7SMGu/9C9g/0Y4mD0qHcrm0zexDY6ztjuZgzy+V60oEqOJ9X3mQwyfZfqm1x4WFH6QBECFfBafpVwVa9oIN8YQ==}
+  primeng@21.1.6:
+    resolution: {integrity: sha512-kPLoixeMPXIXdQO+RnALRmMfSbPQYAeGx1yTltqkj7XbMkSm9Dr7IxqZZUYjUHemCcr2wyjW82G68WjSMDj66w==}
     peerDependencies:
       '@angular/cdk': ^21.0.0
       '@angular/common': ^21.0.0
@@ -5108,7 +5108,7 @@ snapshots:
 
   prettier@3.8.1: {}
 
-  primeng@21.1.5(e5d3b5d0c46fe6a0278f60ae0f6df260):
+  primeng@21.1.6(e5d3b5d0c46fe6a0278f60ae0f6df260):
     dependencies:
       '@angular/cdk': 21.2.6(@angular/common@21.2.8(@angular/core@21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2))(@angular/platform-browser@21.2.8(@angular/common@21.2.8(@angular/core@21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2)))(rxjs@7.8.2)
       '@angular/common': 21.2.8(@angular/core@21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2))(rxjs@7.8.2)
