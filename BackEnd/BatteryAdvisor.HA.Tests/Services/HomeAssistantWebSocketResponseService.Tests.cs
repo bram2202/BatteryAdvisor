@@ -67,6 +67,77 @@ public class HomeAssistantWebSocketResponseServiceTests
         Assert.Equal("sensor.dsmr_energy_consumed_tariff_2", result[1].statistic_id);
     }
 
+    [Fact]
+    public async Task ReceiveForMessageIdAsync_ParsesNestedResultPropertyToStatisticsDuringPeriodArray()
+    {
+        var response = """
+        {
+            "id": 11,
+            "type": "result",
+            "success": true,
+            "result": {
+                "sensor.p1_meter_energie_export": [
+                    {
+                        "start": 1769900400000,
+                        "end": 1772319600000,
+                        "sum": 19.057999999999993,
+                        "change": 19.057999999999993
+                    },
+                    {
+                        "start": 1772319600000,
+                        "end": 1774994400000,
+                        "sum": 177.59000000000015,
+                        "change": 158.53200000000015
+                    }
+                ]
+            }
+        }
+        """;
+
+        var webSocketService = new FakeWebSocketService(response);
+        var helper = new HomeAssistantWebSocketResponseService(
+            webSocketService,
+            NullLogger<HomeAssistantWebSocketResponseService>.Instance);
+
+        var result = await helper.ReceiveForMessageIdAsync<StatisticsDuringPeriodModel[]>(
+            11,
+            CancellationToken.None,
+            "sensor.p1_meter_energie_export");
+
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Length);
+        Assert.Equal(1769900400000, result[0].Start);
+        Assert.Equal(1772319600000, result[0].End);
+        Assert.Equal(19.057999999999993, result[0].Sum);
+        Assert.Equal(19.057999999999993, result[0].Change);
+    }
+
+    [Fact]
+    public async Task ReceiveForMessageIdAsync_ReturnsEmptyArray_WhenNestedResultPropertyMissingAndResultObjectIsEmpty()
+    {
+        var response = """
+        {
+            "id": 4,
+            "type": "result",
+            "success": true,
+            "result": {}
+        }
+        """;
+
+        var webSocketService = new FakeWebSocketService(response);
+        var helper = new HomeAssistantWebSocketResponseService(
+            webSocketService,
+            NullLogger<HomeAssistantWebSocketResponseService>.Instance);
+
+        var result = await helper.ReceiveForMessageIdAsync<StatisticsDuringPeriodModel[]>(
+            4,
+            CancellationToken.None,
+            "sensor.p1_meter_energie_export");
+
+        Assert.NotNull(result);
+        Assert.Empty(result);
+    }
+
     private sealed class FakeWebSocketService(string response) : IWebSocketService
     {
         public Task<ClientWebSocket> GetOrConnectAsync(string url, CancellationToken cancellationToken)
