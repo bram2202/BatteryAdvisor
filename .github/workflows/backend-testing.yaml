@@ -45,7 +45,7 @@ jobs:
 
       - name: Publish test report to GitHub Checks
         if: always()
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         with:
           name: .NET Tests
           path: TestResults/**/*.trx
