@@ -8,6 +8,12 @@ public interface IHomeAssistantWebSocketResponseService
     /// <typeparam name="T">The type to which the "result" property of the WebSocket response should be deserialized.</typeparam>
     /// <param name="messageId">The message ID to match in the WebSocket responses.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <param name="resultPropertyName">
+    /// Optional property name inside the "result" object to deserialize instead of deserializing the full "result" object.
+    /// </param>
     /// <returns>The deserialized result of the WebSocket response with the matching message ID.</returns>
-    Task<T> ReceiveForMessageIdAsync<T>(int messageId, CancellationToken cancellationToken);
+    Task<T> ReceiveForMessageIdAsync<T>(
+        int messageId,
+        CancellationToken cancellationToken,
+        string? resultPropertyName = null);
 }

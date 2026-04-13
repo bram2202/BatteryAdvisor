@@ -67,8 +67,51 @@ public class WebSocketClient : IWebSocketClient
         _logger.LogInformation("Received {Count} statistic IDs from Home Assistant.", models.Length);
 
         return models;
-
     }
+
+    public async Task<StatisticsDuringPeriodModel[]> GetStatisticsDuringPeriod(
+        string statisticId,
+        string startTime,
+        string endTime
+    )
+    {
+        _logger.LogDebug("Starting statistics retrieval for statistic ID {StatisticId} from {StartTime} to {EndTime}.", statisticId, startTime, endTime);
+
+        // Step 1: Ensure we have a connected WebSocket
+        await EnsureConnectedAsync(CancellationToken.None);
+
+        // Step 2: Authenticate if not already authenticated
+        if (!_isLoggedIn)
+        {
+            _logger.LogInformation("Authenticating WebSocket session with Home Assistant.");
+            await _webSocketAuthenticationService.AuthenticateAsync(
+                _options.HomeAssistant.Token,
+                CancellationToken.None);
+
+            _isLoggedIn = true;
+        }
+
+        // Step 3: Send the list statistic IDs request
+        var messageId = _messageIdCounter++;
+        _logger.LogDebug("Sending list statistic IDs request for statistic ID {StatisticId} with message id {MessageId}.", statisticId, messageId);
+
+
+        var listStatisticIdsMessage = WebSocketMessageHelper.BuildGetStatisticDuringPeriodMessage(messageId, statisticId, startTime, endTime);
+        await SendMessageAsync(listStatisticIdsMessage, CancellationToken.None);
+
+        // Step 4 & 5: Wait for the response with the matching message ID and parse the result
+        var models = await _webSocketResponseService.ReceiveForMessageIdAsync<StatisticsDuringPeriodModel[]>(
+            messageId,
+            CancellationToken.None,
+            statisticId);
+
+        _logger.LogInformation("Received {Count} statistics for statistic ID {StatisticId} from Home Assistant.", models.Length, statisticId);
+
+        return models;
+    }
+
+
+
 
     /// <summary>
     /// Sends a message through the WebSocket connection. 

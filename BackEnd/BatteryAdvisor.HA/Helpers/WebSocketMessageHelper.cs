@@ -36,4 +36,26 @@ public static class WebSocketMessageHelper
         });
         return message;
     }
+
+    /// <summary>
+    /// Builds the message to request statistics during a specific period for a given statistic ID from Home Assistant
+    /// </summary> 
+    /// <param name="id">The message ID to include in the request message.</param>
+    /// <param name="statisticId">The statistic ID for which to retrieve statistics.</param>
+    /// <param name="startTime">The start time of the period for which to retrieve statistics.</param>
+    /// <param name="endTime">The end time of the period for which to retrieve statistics.</param>
+    public static string BuildGetStatisticDuringPeriodMessage(int id, string statisticId, string startTime, string endTime)
+    {
+        var message = JsonSerializer.Serialize(new
+        {
+            id = id,
+            type = "recorder/statistics_during_period",
+            statistic_ids = new[] { statisticId },
+            start_time = startTime,
+            end_time = endTime,
+            period = "month", // TODO: make this configurable
+            types = new[] { "sum", "change" }
+        });
+        return message;
+    }
 }
