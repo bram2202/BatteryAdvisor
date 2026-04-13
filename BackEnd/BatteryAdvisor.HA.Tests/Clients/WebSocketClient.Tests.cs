@@ -125,7 +125,7 @@ public class WebSocketClientTests
             _result = result;
         }
 
-        public Task<T> ReceiveForMessageIdAsync<T>(int messageId, CancellationToken cancellationToken)
+        public Task<T> ReceiveForMessageIdAsync<T>(int messageId, CancellationToken cancellationToken, string? resultPropertyName = null)
         {
             CallCount++;
             return Task.FromResult((T)(object)_result);
