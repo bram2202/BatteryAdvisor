@@ -20,7 +20,7 @@ public class WebSocketClient : IWebSocketClient
     private readonly ILogger<WebSocketClient> _logger;
 
     private bool _isLoggedIn = false;
-    private int _messageIdCounter = 1;
+    private int _messageIdCounter = 0;
 
     public WebSocketClient(
         IWebSocketService webSocketService,
@@ -57,7 +57,8 @@ public class WebSocketClient : IWebSocketClient
         }
 
         // Step 3: Send the list statistic IDs request
-        var messageId = _messageIdCounter++;
+        // Using Interlocked.Increment to ensure thread-safe incrementing of the message ID counter in case of concurrent calls to this method.
+        var messageId = Interlocked.Increment(ref _messageIdCounter);
         _logger.LogDebug("Sending list statistic IDs request with message id {MessageId}.", messageId);
         var listStatisticIdsMessage = _messageHelper.BuildListStatisticIdsMessage(messageId);
         await SendMessageAsync(listStatisticIdsMessage, CancellationToken.None);
@@ -95,7 +96,8 @@ public class WebSocketClient : IWebSocketClient
         }
 
         // Step 3: Send the list statistic IDs request
-        var messageId = _messageIdCounter++;
+        // Using Interlocked.Increment to ensure thread-safe incrementing of the message ID counter in case of concurrent calls to this method.
+        var messageId = Interlocked.Increment(ref _messageIdCounter);
         _logger.LogDebug("Sending list statistic IDs request for statistic ID {StatisticId} with message id {MessageId}.", statisticId, messageId);
 
 
