@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BatteryAdvisor.Core\BatteryAdvisor.Core.csproj" />
+    <ProjectReference Include="..\BatteryAdvisor.Core.Contracts\BatteryAdvisor.Core.Contracts.csproj" />
+    <ProjectReference Include="..\BatteryAdvisor.HA.Contracts\BatteryAdvisor.HA.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

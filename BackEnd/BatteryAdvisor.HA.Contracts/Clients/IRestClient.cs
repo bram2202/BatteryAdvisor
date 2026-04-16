@@ -1,4 +1,4 @@
-namespace BatteryAdvisor.HA.Clients;
+namespace BatteryAdvisor.HA.Contracts.Clients;
 
 public interface IRestClient
 {

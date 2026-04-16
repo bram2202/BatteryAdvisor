@@ -1,5 +1,7 @@
-using BatteryAdvisor.Core.Services;
+using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.Core.ApplicationOptions;
+using BatteryAdvisor.HA.Contracts.Helpers;
+using BatteryAdvisor.HA.Services;
 using BatteryAdvisor.HA.Helpers;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -129,7 +131,8 @@ public class WebSocketAuthenticationServiceTests
         return new WebSocketAuthenticationService(
             webSocketService,
             options,
-            NullLogger<WebSocketAuthenticationService>.Instance);
+            NullLogger<WebSocketAuthenticationService>.Instance,
+            new WebSocketMessageHelper());
     }
 
     /// <summary>

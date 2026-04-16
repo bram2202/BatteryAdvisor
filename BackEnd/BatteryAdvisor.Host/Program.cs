@@ -1,6 +1,10 @@
 using BatteryAdvisor.Api;
 using BatteryAdvisor.Core.ApplicationOptions;
+using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.Core.Services;
+using BatteryAdvisor.HA.Contracts.Clients;
+using BatteryAdvisor.HA.Contracts.Helpers;
+using BatteryAdvisor.HA.Contracts.Services;
 using BatteryAdvisor.HA.Clients;
 using BatteryAdvisor.HA.Helpers;
 using BatteryAdvisor.HA.Services;
@@ -21,16 +25,22 @@ builder.Services.Configure<ApplicationOptions>(
 // Setup services
 builder.Services.AddBatteryAdvisorApi();
 
+// Scoped ==> new instance per request
+// Singleton ==> same instance for entire application lifetime
+
+// HA Services
 builder.Services.AddScoped<IRestClient, RestClient>();
+builder.Services.AddSingleton<IWebSocketMessageHelper, WebSocketMessageHelper>();
+
+// Core Services
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 builder.Services.AddSingleton<IWebSocketService, WebSocketService>();
 builder.Services.AddSingleton<IHomeAssistantWebSocketResponseService, HomeAssistantWebSocketResponseService>();
 builder.Services.AddSingleton<IWebSocketAuthenticationService, WebSocketAuthenticationService>();
-
 builder.Services.AddSingleton<IWebSocketClient, WebSocketClient>();
 
-var app = builder.Build();
 
+var app = builder.Build();
 
 app.MapBatteryAdvisorApi();
 

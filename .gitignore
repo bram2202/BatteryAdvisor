@@ -6,10 +6,14 @@ BackEnd/BatteryAdvisor.Core/bin
 BackEnd/BatteryAdvisor.Core/obj
 BackEnd/BatteryAdvisor.Core.Tests/obj
 BackEnd/BatteryAdvisor.Core.Tests/bin
+BackEnd/BatteryAdvisor.Core.Contracts/bin
+BackEnd/BatteryAdvisor.Core.Contracts/obj
 BackEnd/BatteryAdvisor.HA/bin
 BackEnd/BatteryAdvisor.HA/obj
 BackEnd/BatteryAdvisor.HA.Tests/bin
 BackEnd/BatteryAdvisor.HA.Tests/obj
+BackEnd/BatteryAdvisor.HA.Contracts/bin
+BackEnd/BatteryAdvisor.HA.Contracts/obj
 BackEnd/BatteryAdvisor.Host/bin
 BackEnd/BatteryAdvisor.Host/obj
 BackEnd/BatteryAdvisor.Host.Tests/bin

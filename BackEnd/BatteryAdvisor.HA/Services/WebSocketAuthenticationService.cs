@@ -1,29 +1,32 @@
 using BatteryAdvisor.Core.Models.HomeAssistant;
-using BatteryAdvisor.Core.Services;
-using BatteryAdvisor.HA.Services;
+using BatteryAdvisor.Core.Contracts.Services;
+using BatteryAdvisor.HA.Contracts.Services;
+using BatteryAdvisor.HA.Contracts.Helpers;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using BatteryAdvisor.Core.ApplicationOptions;
 
-namespace BatteryAdvisor.HA.Helpers;
+namespace BatteryAdvisor.HA.Services;
 
 public class WebSocketAuthenticationService : IWebSocketAuthenticationService
 {
     private readonly IWebSocketService _webSocketService;
     private readonly ApplicationOptions _options;
     private readonly ILogger<WebSocketAuthenticationService> _logger;
+    private readonly IWebSocketMessageHelper _messageHelper;
 
     public WebSocketAuthenticationService(
         IWebSocketService webSocketService,
         IOptions<ApplicationOptions> options,
-        ILogger<WebSocketAuthenticationService> logger
+        ILogger<WebSocketAuthenticationService> logger,
+        IWebSocketMessageHelper messageHelper
     )
     {
         _webSocketService = webSocketService;
         _options = options.Value;
         _logger = logger;
-
+        _messageHelper = messageHelper;
     }
 
     public async Task AuthenticateAsync(
@@ -31,7 +34,7 @@ public class WebSocketAuthenticationService : IWebSocketAuthenticationService
         CancellationToken cancellationToken)
     {
         _logger.LogInformation("Starting Home Assistant websocket authentication.");
-        var authMessage = WebSocketMessageHelper.BuildAuthMessage(accessToken);
+        var authMessage = _messageHelper.BuildAuthMessage(accessToken);
         await this._webSocketService.SendAsync(authMessage, cancellationToken);
         await WaitForSuccessfulAuthAsync(cancellationToken);
     }

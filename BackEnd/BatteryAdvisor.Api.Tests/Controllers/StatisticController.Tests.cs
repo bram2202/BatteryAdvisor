@@ -1,7 +1,7 @@
 using BatteryAdvisor.Api.Controllers;
 using BatteryAdvisor.Core.Models.DTO;
 using BatteryAdvisor.Core.Models.HomeAssistant;
-using BatteryAdvisor.HA.Clients;
+using BatteryAdvisor.HA.Contracts.Clients;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 

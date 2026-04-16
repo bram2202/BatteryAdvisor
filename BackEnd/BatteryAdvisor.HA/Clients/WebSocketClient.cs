@@ -1,8 +1,9 @@
 using BatteryAdvisor.Core.ApplicationOptions;
 using BatteryAdvisor.Core.Models.HomeAssistant;
-using BatteryAdvisor.Core.Services;
-using BatteryAdvisor.HA.Helpers;
-using BatteryAdvisor.HA.Services;
+using BatteryAdvisor.Core.Contracts.Services;
+using BatteryAdvisor.HA.Contracts.Clients;
+using BatteryAdvisor.HA.Contracts.Helpers;
+using BatteryAdvisor.HA.Contracts.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -13,26 +14,29 @@ public class WebSocketClient : IWebSocketClient
     private readonly IWebSocketService _webSocketService;
     private readonly IHomeAssistantWebSocketResponseService _webSocketResponseService;
     private readonly IWebSocketAuthenticationService _webSocketAuthenticationService;
+    private readonly IWebSocketMessageHelper _messageHelper;
 
     private readonly ApplicationOptions _options;
 
     private readonly ILogger<WebSocketClient> _logger;
 
     private bool _isLoggedIn = false;
-    private int _messageIdCounter = 1;
+    private int _messageIdCounter = 0;
 
     public WebSocketClient(
         IWebSocketService webSocketService,
         IHomeAssistantWebSocketResponseService webSocketResponseService,
         IWebSocketAuthenticationService webSocketAuthenticationService,
         IOptions<ApplicationOptions> options,
-        ILogger<WebSocketClient> logger)
+        ILogger<WebSocketClient> logger,
+        IWebSocketMessageHelper messageHelper)
     {
         _webSocketService = webSocketService;
         _webSocketResponseService = webSocketResponseService;
         _webSocketAuthenticationService = webSocketAuthenticationService;
         _logger = logger;
         _options = options.Value;
+        _messageHelper = messageHelper;
     }
 
     public async Task<StaticIdModel[]> GetStatisticIds()
@@ -54,9 +58,10 @@ public class WebSocketClient : IWebSocketClient
         }
 
         // Step 3: Send the list statistic IDs request
-        var messageId = _messageIdCounter++;
+        // Using Interlocked.Increment to ensure thread-safe incrementing of the message ID counter in case of concurrent calls to this method.
+        var messageId = Interlocked.Increment(ref _messageIdCounter);
         _logger.LogDebug("Sending list statistic IDs request with message id {MessageId}.", messageId);
-        var listStatisticIdsMessage = WebSocketMessageHelper.BuildListStatisticIdsMessage(messageId);
+        var listStatisticIdsMessage = _messageHelper.BuildListStatisticIdsMessage(messageId);
         await SendMessageAsync(listStatisticIdsMessage, CancellationToken.None);
 
         // Step 4 & 5: Wait for the response with the matching message ID and parse the result
@@ -92,11 +97,12 @@ public class WebSocketClient : IWebSocketClient
         }
 
         // Step 3: Send the list statistic IDs request
-        var messageId = _messageIdCounter++;
+        // Using Interlocked.Increment to ensure thread-safe incrementing of the message ID counter in case of concurrent calls to this method.
+        var messageId = Interlocked.Increment(ref _messageIdCounter);
         _logger.LogDebug("Sending list statistic IDs request for statistic ID {StatisticId} with message id {MessageId}.", statisticId, messageId);
 
 
-        var listStatisticIdsMessage = WebSocketMessageHelper.BuildGetStatisticDuringPeriodMessage(messageId, statisticId, startTime, endTime);
+        var listStatisticIdsMessage = _messageHelper.BuildGetStatisticDuringPeriodMessage(messageId, statisticId, startTime, endTime);
         await SendMessageAsync(listStatisticIdsMessage, CancellationToken.None);
 
         // Step 4 & 5: Wait for the response with the matching message ID and parse the result

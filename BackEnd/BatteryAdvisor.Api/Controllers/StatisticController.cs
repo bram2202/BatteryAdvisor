@@ -1,5 +1,5 @@
 using BatteryAdvisor.Core.Models.DTO;
-using BatteryAdvisor.HA.Clients;
+using BatteryAdvisor.HA.Contracts.Clients;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BatteryAdvisor.Api.Controllers;

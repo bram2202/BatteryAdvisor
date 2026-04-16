@@ -1,5 +1,6 @@
-using BatteryAdvisor.Core.Services;
+using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.Core.ApplicationOptions;
+using BatteryAdvisor.HA.Contracts.Clients;
 using Microsoft.Extensions.Options;
 
 namespace BatteryAdvisor.HA.Clients;

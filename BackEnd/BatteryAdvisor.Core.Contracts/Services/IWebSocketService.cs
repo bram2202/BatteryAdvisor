@@ -1,6 +1,6 @@
 using System.Net.WebSockets;
 
-namespace BatteryAdvisor.Core.Services;
+namespace BatteryAdvisor.Core.Contracts.Services;
 
 public interface IWebSocketService
 {

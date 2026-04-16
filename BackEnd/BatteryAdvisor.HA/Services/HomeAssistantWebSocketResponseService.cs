@@ -1,5 +1,6 @@
 using BatteryAdvisor.Core.Models.HomeAssistant;
-using BatteryAdvisor.Core.Services;
+using BatteryAdvisor.Core.Contracts.Services;
+using BatteryAdvisor.HA.Contracts.Services;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

@@ -5,10 +5,12 @@ namespace BatteryAdvisor.HA.Tests.Helpers;
 
 public class WebSocketMessageHelperTests
 {
+    private readonly WebSocketMessageHelper _helper = new();
+
     [Fact]
     public void BuildAuthMessage_ReturnsValidJson()
     {
-        var result = WebSocketMessageHelper.BuildAuthMessage("my-token");
+        var result = _helper.BuildAuthMessage("my-token");
 
         var doc = JsonDocument.Parse(result);
         Assert.Equal("auth", doc.RootElement.GetProperty("type").GetString());
@@ -18,7 +20,7 @@ public class WebSocketMessageHelperTests
     [Fact]
     public void BuildListStatisticIdsMessage_ReturnsValidJson()
     {
-        var result = WebSocketMessageHelper.BuildListStatisticIdsMessage(42);
+        var result = _helper.BuildListStatisticIdsMessage(42);
 
         var doc = JsonDocument.Parse(result);
         Assert.Equal(42, doc.RootElement.GetProperty("id").GetInt32());
