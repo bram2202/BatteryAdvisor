@@ -1,5 +1,5 @@
 using BatteryAdvisor.Core.Models.HomeAssistant;
-using BatteryAdvisor.Core.Services;
+using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.HA.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Net.WebSockets;

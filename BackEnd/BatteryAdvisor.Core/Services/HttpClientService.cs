@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BatteryAdvisor.Core.Contracts.Services;
 
 namespace BatteryAdvisor.Core.Services;
 

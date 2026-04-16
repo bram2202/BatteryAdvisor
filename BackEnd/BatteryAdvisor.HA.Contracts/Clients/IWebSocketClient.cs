@@ -1,6 +1,6 @@
 using BatteryAdvisor.Core.Models.HomeAssistant;
 
-namespace BatteryAdvisor.HA.Clients;
+namespace BatteryAdvisor.HA.Contracts.Clients;
 
 public interface IWebSocketClient
 {

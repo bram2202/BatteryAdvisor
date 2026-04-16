@@ -1,7 +1,7 @@
 using System.Net.WebSockets;
 using System.Text;
 using Microsoft.Extensions.Logging;
-
+using BatteryAdvisor.Core.Contracts.Services;
 
 namespace BatteryAdvisor.Core.Services;
 

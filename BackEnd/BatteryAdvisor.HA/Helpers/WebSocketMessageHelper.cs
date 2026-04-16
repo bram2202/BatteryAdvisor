@@ -1,5 +1,6 @@
 using System.Text.Json;
 using BatteryAdvisor.Core.Models.HomeAssistant;
+using BatteryAdvisor.HA.Contracts.Helpers;
 
 namespace BatteryAdvisor.HA.Helpers;
 

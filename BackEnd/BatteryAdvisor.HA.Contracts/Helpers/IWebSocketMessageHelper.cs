@@ -1,4 +1,4 @@
-namespace BatteryAdvisor.HA.Helpers;
+namespace BatteryAdvisor.HA.Contracts.Helpers;
 
 public interface IWebSocketMessageHelper
 {

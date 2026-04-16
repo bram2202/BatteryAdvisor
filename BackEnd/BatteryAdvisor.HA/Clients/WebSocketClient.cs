@@ -1,8 +1,9 @@
 using BatteryAdvisor.Core.ApplicationOptions;
 using BatteryAdvisor.Core.Models.HomeAssistant;
-using BatteryAdvisor.Core.Services;
-using BatteryAdvisor.HA.Helpers;
-using BatteryAdvisor.HA.Services;
+using BatteryAdvisor.Core.Contracts.Services;
+using BatteryAdvisor.HA.Contracts.Clients;
+using BatteryAdvisor.HA.Contracts.Helpers;
+using BatteryAdvisor.HA.Contracts.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

@@ -1,6 +1,10 @@
 using BatteryAdvisor.Api;
 using BatteryAdvisor.Core.ApplicationOptions;
+using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.Core.Services;
+using BatteryAdvisor.HA.Contracts.Clients;
+using BatteryAdvisor.HA.Contracts.Helpers;
+using BatteryAdvisor.HA.Contracts.Services;
 using BatteryAdvisor.HA.Clients;
 using BatteryAdvisor.HA.Helpers;
 using BatteryAdvisor.HA.Services;

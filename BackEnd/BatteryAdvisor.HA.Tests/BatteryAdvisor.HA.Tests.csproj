@@ -21,6 +21,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BatteryAdvisor.HA\BatteryAdvisor.HA.csproj" />
+    <ProjectReference Include="..\BatteryAdvisor.HA.Contracts\BatteryAdvisor.HA.Contracts.csproj" />
+    <ProjectReference Include="..\BatteryAdvisor.Core.Contracts\BatteryAdvisor.Core.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

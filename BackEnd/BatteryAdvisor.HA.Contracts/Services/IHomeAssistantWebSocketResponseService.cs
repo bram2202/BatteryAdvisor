@@ -1,4 +1,4 @@
-namespace BatteryAdvisor.HA.Services;
+namespace BatteryAdvisor.HA.Contracts.Services;
 
 public interface IHomeAssistantWebSocketResponseService
 {
