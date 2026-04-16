@@ -129,7 +129,8 @@ public class WebSocketAuthenticationServiceTests
         return new WebSocketAuthenticationService(
             webSocketService,
             options,
-            NullLogger<WebSocketAuthenticationService>.Instance);
+            NullLogger<WebSocketAuthenticationService>.Instance,
+            new WebSocketMessageHelper());
     }
 
     /// <summary>

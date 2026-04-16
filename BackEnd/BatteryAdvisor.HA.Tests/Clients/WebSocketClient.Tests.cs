@@ -3,6 +3,7 @@ using BatteryAdvisor.Core.ApplicationOptions;
 using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.Core.Services;
 using BatteryAdvisor.HA.Clients;
+using BatteryAdvisor.HA.Helpers;
 using BatteryAdvisor.HA.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -85,7 +86,8 @@ public class WebSocketClientTests
             responseService,
             authenticationService,
             options,
-            NullLogger<WebSocketClient>.Instance);
+            NullLogger<WebSocketClient>.Instance,
+            new WebSocketMessageHelper());
     }
 
     private sealed class FakeWebSocketService : IWebSocketService
