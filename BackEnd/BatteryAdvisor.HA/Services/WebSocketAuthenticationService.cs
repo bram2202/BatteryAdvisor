@@ -5,8 +5,9 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using BatteryAdvisor.Core.ApplicationOptions;
+using BatteryAdvisor.HA.Helpers;
 
-namespace BatteryAdvisor.HA.Helpers;
+namespace BatteryAdvisor.HA.Services;
 
 public class WebSocketAuthenticationService : IWebSocketAuthenticationService
 {

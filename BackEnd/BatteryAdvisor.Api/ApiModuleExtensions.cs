@@ -13,7 +13,6 @@ public static class ApiModuleExtensions
         {
             httpClient.Timeout = TimeSpan.FromSeconds(30);
         });
-        services.AddScoped<IRestClient, RestClient>();
         return services;
     }
 
