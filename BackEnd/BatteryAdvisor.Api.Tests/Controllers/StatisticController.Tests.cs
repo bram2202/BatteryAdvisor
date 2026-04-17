@@ -17,13 +17,13 @@ public class StatisticControllerTests
         {
             new StaticIdModel
             {
-                statistic_id = "sensor.dsmr_energy_consumed_tariff_1",
-                display_unit_of_measurement = "kWh"
+                StatisticId = "sensor.dsmr_energy_consumed_tariff_1",
+                DisplayUnitOfMeasurement = "kWh"
             },
             new StaticIdModel
             {
-                statistic_id = "sensor.dsmr_energy_consumed_tariff_2",
-                display_unit_of_measurement = "kWh"
+                StatisticId = "sensor.dsmr_energy_consumed_tariff_2",
+                DisplayUnitOfMeasurement = "kWh"
             }
         };
 
@@ -42,8 +42,8 @@ public class StatisticControllerTests
         var response = Assert.IsAssignableFrom<StaticIdModel[]>(okResult.Value);
 
         Assert.Equal(2, response.Length);
-        Assert.Equal("sensor.dsmr_energy_consumed_tariff_1", response[0].statistic_id);
-        Assert.Equal("sensor.dsmr_energy_consumed_tariff_2", response[1].statistic_id);
+        Assert.Equal("sensor.dsmr_energy_consumed_tariff_1", response[0].StatisticId);
+        Assert.Equal("sensor.dsmr_energy_consumed_tariff_2", response[1].StatisticId);
 
         webSocketClientMock.Verify(c => c.GetStatisticIds(), Times.Once);
     }

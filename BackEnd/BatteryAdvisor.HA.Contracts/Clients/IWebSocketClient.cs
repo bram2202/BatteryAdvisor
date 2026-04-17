@@ -11,6 +11,11 @@ public interface IWebSocketClient
    Task<StaticIdModel[]> GetStatisticIds();
 
    /// <summary>
+   /// Get the list of entities from Home Assistant via the WebSocket API.
+   /// </summary>
+   Task<EntityModel[]> GetEntities();
+
+   /// <summary>
    /// Get statistics for a specific statistic ID during a specified period from Home Assistant via the WebSocket API.
    /// </summary>
    /// <param name="statisticId">The statistic ID for which to retrieve statistics.</param>

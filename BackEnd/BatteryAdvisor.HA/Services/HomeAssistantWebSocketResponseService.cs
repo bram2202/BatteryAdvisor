@@ -1,9 +1,8 @@
-using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.HA.Contracts.Services;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using BatteryAdvisor.Core.Models.Response;
 
 namespace BatteryAdvisor.HA.Services;
 
@@ -49,10 +48,6 @@ public class HomeAssistantWebSocketResponseService : IHomeAssistantWebSocketResp
 
                 if (parsedMessage.Result.ValueKind is JsonValueKind.Undefined or JsonValueKind.Null)
                 {
-                    // _logger.LogError(
-                    //     "Websocket message result was empty for message ID {MessageId}: {Message}",
-                    //     messageId,
-                    //     message);
                     throw new InvalidOperationException(
                         $"Websocket message result was empty for {typeof(T).Name}, message ID {messageId}, message: {message}");
                 }
@@ -70,13 +65,12 @@ public class HomeAssistantWebSocketResponseService : IHomeAssistantWebSocketResp
                 var resultElement = ResolveResultElement(parsedMessage.Result, resultPropertyName);
                 var result = DeserializeResult<T>(resultElement);
 
-                _logger.LogInformation("Received response for message ID {MessageId}: {Result}", messageId, result);
+                _logger.LogDebug("Received response for message ID {MessageId}", messageId);
 
                 return result;
             }
             catch (JsonException ex)
-            {
-                _logger.LogError(ex, "JSON deserialization error for message ID {MessageId}: {Message}", messageId, message);
+            {            
                 throw new InvalidOperationException(
                     $"Failed to deserialize websocket message result to {typeof(T).Name}.",
                     ex);
