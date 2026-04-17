@@ -44,18 +44,8 @@ public class WebSocketClient : IWebSocketClient
         _logger.LogDebug("Starting statistics ID retrieval from Home Assistant.");
 
         // Step 1: Ensure we have a connected WebSocket
-        await EnsureConnectedAsync(CancellationToken.None);
-
         // Step 2: Authenticate if not already authenticated
-        if (!_isLoggedIn)
-        {
-            _logger.LogInformation("Authenticating WebSocket session with Home Assistant.");
-            await _webSocketAuthenticationService.AuthenticateAsync(
-                _options.HomeAssistant.Token,
-                CancellationToken.None);
-
-            _isLoggedIn = true;
-        }
+        await CheckAndConnect();
 
         // Step 3: Send the list statistic IDs request
         // Using Interlocked.Increment to ensure thread-safe incrementing of the message ID counter in case of concurrent calls to this method.
@@ -65,13 +55,13 @@ public class WebSocketClient : IWebSocketClient
         await SendMessageAsync(listStatisticIdsMessage, CancellationToken.None);
 
         // Step 4 & 5: Wait for the response with the matching message ID and parse the result
-        var models = await _webSocketResponseService.ReceiveForMessageIdAsync<StaticIdModel[]>(
+        var staticIds = await _webSocketResponseService.ReceiveForMessageIdAsync<StaticIdModel[]>(
             messageId,
             CancellationToken.None);
 
-        _logger.LogInformation("Received {Count} statistic IDs from Home Assistant.", models.Length);
+        _logger.LogInformation("Received {Count} statistic IDs", staticIds.Length);
 
-        return models;
+        return staticIds;
     }
 
     public async Task<StatisticsDuringPeriodModel[]> GetStatisticsDuringPeriod(
@@ -82,6 +72,64 @@ public class WebSocketClient : IWebSocketClient
     {
         _logger.LogDebug("Starting statistics retrieval for statistic ID {StatisticId} from {StartTime} to {EndTime}.", statisticId, startTime, endTime);
 
+        // Step 1: Ensure we have a connected WebSocket
+        // Step 2: Authenticate if not already authenticated
+        await CheckAndConnect();
+
+
+        // Step 3: Send the list statistic IDs request
+        // Using Interlocked.Increment to ensure thread-safe incrementing of the message ID counter in case of concurrent calls to this method.
+        var messageId = Interlocked.Increment(ref _messageIdCounter);
+        _logger.LogDebug("Sending list statistic IDs request for statistic ID {StatisticId} with message id {MessageId}.", statisticId, messageId);
+
+
+        var listStatisticIdsMessage = _messageHelper.BuildGetStatisticDuringPeriodMessage(messageId, statisticId, startTime, endTime);
+        await SendMessageAsync(listStatisticIdsMessage, CancellationToken.None);
+
+        // Step 4 & 5: Wait for the response with the matching message ID and parse the result
+        var statistics = await _webSocketResponseService.ReceiveForMessageIdAsync<StatisticsDuringPeriodModel[]>(
+            messageId,
+            CancellationToken.None,
+            statisticId);
+
+        _logger.LogInformation("Received {Count} statistics for statistic ID {StatisticId}", statistics.Length, statisticId);
+
+        return statistics;
+    }
+
+
+    public async Task<EntityModel[]> GetEntities()
+    {
+        _logger.LogDebug("Starting entity retrieval from Home Assistant.");
+
+        // Step 1: Ensure we have a connected WebSocket
+        // Step 2: Authenticate if not already authenticated
+        await CheckAndConnect();
+
+        // Step 3: Send the list entities request
+        // Using Interlocked.Increment to ensure thread-safe incrementing of the message ID counter in case of concurrent calls to this method.
+        var messageId = Interlocked.Increment(ref _messageIdCounter);
+        _logger.LogDebug("Sending list entities request with message id {MessageId}.", messageId);
+        var listEntitiesMessage = _messageHelper.BuildGetEntitiesMessage(messageId);
+        await SendMessageAsync(listEntitiesMessage, CancellationToken.None);
+
+        // Step 4 & 5: Wait for the response with the matching message ID and parse the result
+        var entities = await _webSocketResponseService.ReceiveForMessageIdAsync<EntityModel[]>(
+            messageId,
+            CancellationToken.None);
+        
+        _logger.LogInformation("Received {Count} entities.", entities.Length);
+
+        return entities;
+    }
+
+
+    /// <summary>
+    /// Checks if there is an active WebSocket connection and if the client is authenticated. 
+    /// If not, it establishes the connection and performs authentication with Home Assistant.
+    /// </summary>
+    private async Task CheckAndConnect()
+    {
         // Step 1: Ensure we have a connected WebSocket
         await EnsureConnectedAsync(CancellationToken.None);
 
@@ -94,29 +142,8 @@ public class WebSocketClient : IWebSocketClient
                 CancellationToken.None);
 
             _isLoggedIn = true;
-        }
-
-        // Step 3: Send the list statistic IDs request
-        // Using Interlocked.Increment to ensure thread-safe incrementing of the message ID counter in case of concurrent calls to this method.
-        var messageId = Interlocked.Increment(ref _messageIdCounter);
-        _logger.LogDebug("Sending list statistic IDs request for statistic ID {StatisticId} with message id {MessageId}.", statisticId, messageId);
-
-
-        var listStatisticIdsMessage = _messageHelper.BuildGetStatisticDuringPeriodMessage(messageId, statisticId, startTime, endTime);
-        await SendMessageAsync(listStatisticIdsMessage, CancellationToken.None);
-
-        // Step 4 & 5: Wait for the response with the matching message ID and parse the result
-        var models = await _webSocketResponseService.ReceiveForMessageIdAsync<StatisticsDuringPeriodModel[]>(
-            messageId,
-            CancellationToken.None,
-            statisticId);
-
-        _logger.LogInformation("Received {Count} statistics for statistic ID {StatisticId} from Home Assistant.", models.Length, statisticId);
-
-        return models;
+        }       
     }
-
-
 
 
     /// <summary>

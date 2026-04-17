@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace BatteryAdvisor.Core.Models.HomeAssistant;
+namespace BatteryAdvisor.Core.Models.Response;
 
 public class WebSocketResponseModel
 {

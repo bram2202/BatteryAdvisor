@@ -16,7 +16,7 @@ public class WebSocketClientTests
     public async Task GetStatisticIds_ConnectsAuthenticatesAndReturnsModels()
     {
         var webSocketService = new FakeWebSocketService();
-        var responseService = new FakeResponseService(new[] { new StaticIdModel { statistic_id = "sensor.test" } });
+        var responseService = new FakeResponseService(new[] { new StaticIdModel { StatisticId = "sensor.test" } });
         var authenticationService = new FakeAuthenticationService();
 
         var client = CreateClient(webSocketService, responseService, authenticationService, "https://ha.local");
@@ -24,7 +24,7 @@ public class WebSocketClientTests
         var result = await client.GetStatisticIds();
 
         Assert.Single(result);
-        Assert.Equal("sensor.test", result[0].statistic_id);
+        Assert.Equal("sensor.test", result[0].StatisticId);
 
         Assert.Equal(1, authenticationService.CallCount);
         Assert.Equal("token-123", authenticationService.LastToken);

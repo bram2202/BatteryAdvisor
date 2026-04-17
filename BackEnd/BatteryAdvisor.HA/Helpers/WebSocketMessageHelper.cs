@@ -1,5 +1,5 @@
 using System.Text.Json;
-using BatteryAdvisor.Core.Models.HomeAssistant;
+using BatteryAdvisor.Core.Models.Requests;
 using BatteryAdvisor.HA.Contracts.Helpers;
 
 namespace BatteryAdvisor.HA.Helpers;
@@ -40,6 +40,16 @@ public class WebSocketMessageHelper : IWebSocketMessageHelper
             end_time = endTime,
             period = "month", // TODO: make this configurable
             types = new[] { "sum", "change" }
+        });
+        return message;
+    }
+
+    public string BuildGetEntitiesMessage(int id)
+    {
+        var message = JsonSerializer.Serialize(new
+        {
+            id = id,
+            type = "get_states"
         });
         return message;
     }

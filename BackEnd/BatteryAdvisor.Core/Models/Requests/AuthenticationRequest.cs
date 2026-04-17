@@ -1,4 +1,4 @@
-namespace BatteryAdvisor.Core.Models.HomeAssistant;
+namespace BatteryAdvisor.Core.Models.Requests;
 
 public class AuthenticationRequest
 {

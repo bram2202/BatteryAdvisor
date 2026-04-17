@@ -31,6 +31,7 @@ builder.Services.AddBatteryAdvisorApi();
 // HA Services
 builder.Services.AddScoped<IRestClient, RestClient>();
 builder.Services.AddSingleton<IWebSocketMessageHelper, WebSocketMessageHelper>();
+builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 
 // Core Services
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();

@@ -12,9 +12,7 @@ public class StatisticController : ControllerBase
     private readonly IWebSocketClient _homeAssistantWebSocketClient;
 
 
-    public StatisticController(
-        IWebSocketClient homeAssistantWebSocketClient
-    )
+    public StatisticController(IWebSocketClient homeAssistantWebSocketClient)
     {
         _homeAssistantWebSocketClient = homeAssistantWebSocketClient;
     }

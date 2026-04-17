@@ -2,8 +2,10 @@
   <Project Path="BatteryAdvisor.Api/BatteryAdvisor.Api.csproj" />
   <Project Path="BatteryAdvisor.Api.Tests/BatteryAdvisor.Api.Tests.csproj" />
   <Project Path="BatteryAdvisor.Core/BatteryAdvisor.Core.csproj" />
+  <Project Path="BatteryAdvisor.Core.Contracts/BatteryAdvisor.Core.Contracts.csproj" />
   <Project Path="BatteryAdvisor.Core.Tests/BatteryAdvisor.Core.Tests.csproj" />
   <Project Path="BatteryAdvisor.HA/BatteryAdvisor.HA.csproj" />
+  <Project Path="BatteryAdvisor.HA.Contracts/BatteryAdvisor.HA.Contracts.csproj" />
   <Project Path="BatteryAdvisor.HA.Tests/BatteryAdvisor.HA.Tests.csproj" />
   <Project Path="BatteryAdvisor.Host/BatteryAdvisor.Host.csproj" />
   <Project Path="BatteryAdvisor.Host.Tests/BatteryAdvisor.Host.Tests.csproj" />
