@@ -4,6 +4,9 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
+          <Exclude>[BatteryAdvisor.Api]BatteryAdvisor.Api.ApiModuleExtensions</Exclude>
+          <Exclude>[BatteryAdvisor.Api]BatteryAdvisor.Api.Program</Exclude>
+          <ExcludeByAttribute>ExcludeFromCodeCoverageAttribute;GeneratedCodeAttribute;CompilerGeneratedAttribute</ExcludeByAttribute>
           <ExcludeByFile>**/obj/**;**/*.g.cs;**/*.generated.cs</ExcludeByFile>
         </Configuration>
       </DataCollector>

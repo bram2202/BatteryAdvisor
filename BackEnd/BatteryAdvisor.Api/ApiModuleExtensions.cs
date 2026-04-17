@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.Core.Services;
 
 namespace BatteryAdvisor.Api;
 
+[ExcludeFromCodeCoverage]
 public static class ApiModuleExtensions
 {
     public static IServiceCollection AddBatteryAdvisorApi(this IServiceCollection services)
