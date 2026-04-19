@@ -8,6 +8,8 @@ using BatteryAdvisor.HA.Contracts.Services;
 using BatteryAdvisor.HA.Clients;
 using BatteryAdvisor.HA.Helpers;
 using BatteryAdvisor.HA.Services;
+using BatteryAdvisor.Core.Database;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,11 +36,24 @@ builder.Services.AddSingleton<IWebSocketMessageHelper, WebSocketMessageHelper>()
 builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 
 // Core Services
+builder.Services.AddScoped<IDatabaseService, DatabaseService>();
+builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 builder.Services.AddSingleton<IWebSocketService, WebSocketService>();
 builder.Services.AddSingleton<IHomeAssistantWebSocketResponseService, HomeAssistantWebSocketResponseService>();
 builder.Services.AddSingleton<IWebSocketAuthenticationService, WebSocketAuthenticationService>();
 builder.Services.AddSingleton<IWebSocketClient, WebSocketClient>();
+
+// Database
+builder.Services.AddDbContext<BatteryAdvisorContext>(options =>
+{
+
+    var dbPath = Path.Combine(builder.Environment.ContentRootPath, "BatteryAdvisor.db");
+    var connectionString = $"Data Source={dbPath}";
+
+    options.UseSqlite(connectionString);
+}
+);
 
 
 var app = builder.Build();
