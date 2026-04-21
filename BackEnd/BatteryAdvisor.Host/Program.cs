@@ -47,8 +47,8 @@ builder.Services.AddSingleton<IWebSocketClient, WebSocketClient>();
 // Database
 builder.Services.AddDbContext<BatteryAdvisorContext>(options =>
 {
-
-    var dbPath = Path.Combine(builder.Environment.ContentRootPath, "BatteryAdvisor.db");
+    var databaseName = builder.Configuration.GetValue<string>("DatabaseName") ?? "BatteryAdvisor.db";
+    var dbPath = Path.Combine(builder.Environment.ContentRootPath, databaseName);
     var connectionString = $"Data Source={dbPath}";
 
     options.UseSqlite(connectionString);
