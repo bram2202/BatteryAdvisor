@@ -4,6 +4,10 @@
     <ProjectReference Include="..\BatteryAdvisor.Api\BatteryAdvisor.Api.csproj" />
     <ProjectReference Include="..\BatteryAdvisor.Core\BatteryAdvisor.Core.csproj" />
     <ProjectReference Include="..\BatteryAdvisor.HA\BatteryAdvisor.HA.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.6">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup>
