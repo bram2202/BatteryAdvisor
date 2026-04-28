@@ -45,6 +45,37 @@ reportgenerator -reports:"./TestResults/**/coverage.cobertura.xml" -targetdir:".
 xdg-open ./TestResults/report/index.html
 ```
 
+### SQLite
+
+Install dotnet-ef globally
+```
+dotnet tool install --global dotnet-ef
+```
+
+How to add a migration
+```
+dotnet ef migrations add <Migration name> --project ./BackEnd/BatteryAdvisor.Core --startup-project ./BackEnd/BatteryAdvisor.Host --context BatteryAdvisorContext
+```
+
+
+Update database
+```
+dotnet ef database update --project ./BackEnd/BatteryAdvisor.Core --startup-project ./BackEnd/BatteryAdvisor.Host --context BatteryAdvisorContext
+```
+
+#### Rollback
+
+Rollback
+```
+dotnet ef database update <Migration name>> --project ./BackEnd/BatteryAdvisor.Core --startup-project ./BackEnd/BatteryAdvisor.Host --context BatteryAdvisorContext
+```
+
+Delete a migration
+```
+dotnet ef migrations remove --project ./BackEnd/BatteryAdvisor.Core --startup-project ./BackEnd/BatteryAdvisor.Host --context BatteryAdvisorContext
+```
+
+
 
 ## Frontend
 
