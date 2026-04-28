@@ -85,7 +85,7 @@ public class ConfigurationServiceTests
         await using var context = CreateDbContext();
         var service = CreateService(context);
 
-        var config1 = new ConfigurationCreateModel
+        var config1 = new ConfigurationCreateModel 
         {
             Name = ConfigurationKeys.HAUrl,
             Value = "https://example.com"
@@ -101,6 +101,23 @@ public class ConfigurationServiceTests
         await service.AddAsync(config1);
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.AddAsync(config2));
         Assert.Contains("already exists", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task AddAsync_WithInvalidName_ThrowsArgumentException()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+        var config = new ConfigurationCreateModel
+        {
+            Name = (ConfigurationKeys)999,
+            Value = "https://example.com"
+        };
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<ArgumentException>(() => service.AddAsync(config));
+        Assert.Contains("invalid configuration name", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -179,5 +196,80 @@ public class ConfigurationServiceTests
 
         // Assert
         Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetConfigurationAsync_WithInvalidKey_ThrowsArgumentException()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<ArgumentException>(() => service.GetConfigurationAsync((ConfigurationKeys)999));
+        Assert.Contains("invalid configuration key", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateConfigurationAsync_WhenConfigurationExists_UpdatesValue()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+
+        context.Configurations.Add(new ConfigurationModel
+        {
+            Id = Guid.NewGuid(),
+            Name = ConfigurationKeys.HAUrl,
+            Value = "https://old.example.com"
+        });
+        await context.SaveChangesAsync();
+
+        var updateModel = new ConfigurationCreateModel
+        {
+            Name = ConfigurationKeys.HAUrl,
+            Value = "  https://new.example.com  "
+        };
+
+        // Act
+        await service.UpdateConfigurationAsync(updateModel);
+
+        // Assert
+        var result = await context.Configurations.SingleAsync(x => x.Name == ConfigurationKeys.HAUrl);
+        Assert.Equal("https://new.example.com", result.Value);
+    }
+
+    [Fact]
+    public async Task UpdateConfigurationAsync_WithInvalidName_ThrowsArgumentException()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+        var updateModel = new ConfigurationCreateModel
+        {
+            Name = (ConfigurationKeys)999,
+            Value = "some-value"
+        };
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<ArgumentException>(() => service.UpdateConfigurationAsync(updateModel));
+        Assert.Contains("invalid configuration name", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateConfigurationAsync_WhenConfigurationDoesNotExist_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+        var updateModel = new ConfigurationCreateModel
+        {
+            Name = ConfigurationKeys.HAToken,
+            Value = "token-value"
+        };
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.UpdateConfigurationAsync(updateModel));
+        Assert.Contains("does not exist", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 }

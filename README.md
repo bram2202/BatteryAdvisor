@@ -45,6 +45,9 @@ reportgenerator -reports:"./TestResults/**/coverage.cobertura.xml" -targetdir:".
 xdg-open ./TestResults/report/index.html
 ```
 
+### Api docs
+To view the API docs, run the applictiona and go to `<url>/scalar/v1`
+
 ### SQLite
 
 Install dotnet-ef globally
