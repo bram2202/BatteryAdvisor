@@ -69,7 +69,7 @@ public class ConfigurationService : IConfigurationService
         {
             Name = configuration.Name,
             Value = configuration.Value
-        };       
+        };
     }
 
     public async Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync()
@@ -90,6 +90,11 @@ public class ConfigurationService : IConfigurationService
         if (!Enum.IsDefined(configuration.Name))
         {
             throw new ArgumentException($"Invalid configuration name '{configuration.Name}'.", nameof(configuration));
+        }
+
+        if (string.IsNullOrWhiteSpace(configuration.Value))
+        {
+            throw new ArgumentException("Configuration value cannot be empty.", nameof(configuration));
         }
 
         var existingConfiguration = await _context.Configurations

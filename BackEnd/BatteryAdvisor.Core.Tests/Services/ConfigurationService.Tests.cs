@@ -272,4 +272,87 @@ public class ConfigurationServiceTests
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.UpdateConfigurationAsync(updateModel));
         Assert.Contains("does not exist", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
+
+    [Fact]
+    public async Task GetAllConfigurationsAsync_WhenNoConfigurationsExist_ReturnsEmptyCollection()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+
+        // Act
+        var result = await service.GetAllConfigurationsAsync();
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetAllConfigurationsAsync_WhenConfigurationsExist_ReturnsAll()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+
+        context.Configurations.AddRange(
+            new BatteryAdvisor.Core.Models.Database.ConfigurationModel { Id = Guid.NewGuid(), Name = ConfigurationKeys.HAUrl, Value = "https://example.com" },
+            new BatteryAdvisor.Core.Models.Database.ConfigurationModel { Id = Guid.NewGuid(), Name = ConfigurationKeys.HAToken, Value = "token123" }
+        );
+        await context.SaveChangesAsync();
+
+        // Act
+        var result = (await service.GetAllConfigurationsAsync()).ToList();
+
+        // Assert
+        Assert.Equal(2, result.Count);
+        Assert.Contains(result, r => r.Name == ConfigurationKeys.HAUrl && r.Value == "https://example.com");
+        Assert.Contains(result, r => r.Name == ConfigurationKeys.HAToken && r.Value == "token123");
+    }
+
+    [Fact]
+    public async Task DeleteConfigurationAsync_WhenConfigurationExists_DeletesIt()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+
+        context.Configurations.Add(new BatteryAdvisor.Core.Models.Database.ConfigurationModel
+        {
+            Id = Guid.NewGuid(),
+            Name = ConfigurationKeys.HAUrl,
+            Value = "https://example.com"
+        });
+        await context.SaveChangesAsync();
+
+        // Act
+        await service.DeleteConfigurationAsync(ConfigurationKeys.HAUrl);
+
+        // Assert
+        var result = await context.Configurations.SingleOrDefaultAsync(x => x.Name == ConfigurationKeys.HAUrl);
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task DeleteConfigurationAsync_WhenConfigurationDoesNotExist_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.DeleteConfigurationAsync(ConfigurationKeys.HAUrl));
+        Assert.Contains("does not exist", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DeleteConfigurationAsync_WithInvalidKey_ThrowsArgumentException()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<ArgumentException>(() => service.DeleteConfigurationAsync((ConfigurationKeys)999));
+        Assert.Contains("invalid configuration key", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
 }

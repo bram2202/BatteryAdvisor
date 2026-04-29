@@ -6,8 +6,9 @@
         <Configuration>
           <Exclude>[BatteryAdvisor.Api]BatteryAdvisor.Api.ApiModuleExtensions</Exclude>
           <Exclude>[BatteryAdvisor.Api]BatteryAdvisor.Api.Program</Exclude>
+          <Exclude>[BatteryAdvisor.Core]BatteryAdvisor.Core.Migrations*</Exclude>
           <ExcludeByAttribute>ExcludeFromCodeCoverageAttribute;GeneratedCodeAttribute;CompilerGeneratedAttribute</ExcludeByAttribute>
-          <ExcludeByFile>**/obj/**;**/*.g.cs;**/*.generated.cs</ExcludeByFile>
+          <ExcludeByFile>**/obj/**;**/*.g.cs;**/*.generated.cs;**/Migrations/*.cs</ExcludeByFile>
         </Configuration>
       </DataCollector>
     </DataCollectors>

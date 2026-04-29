@@ -39,14 +39,15 @@ dotnet test BatteryAdvisor.slnx
 How to see test coverage
 ```
 dotnet tool install --global dotnet-reportgenerator-globaltool
-rm -rf ./TestResults
-dotnet test BatteryAdvisor.slnx --collect:"XPlat Code Coverage" --settings coverage.runsettings --results-directory ./TestResults
-reportgenerator -reports:"./TestResults/**/coverage.cobertura.xml" -targetdir:"./TestResults/report" -reporttypes:"Html;Badges" -filefilters:"-*.generated.cs"
+
+rm -rf ./TestResults &&
+dotnet test BatteryAdvisor.slnx --collect:"XPlat Code Coverage" --settings coverage.runsettings --results-directory ./TestResults &&
+reportgenerator -reports:"./TestResults/**/coverage.cobertura.xml" -targetdir:"./TestResults/report" -reporttypes:"Html;Badges" -filefilters:"-*.generated.cs" &&
 xdg-open ./TestResults/report/index.html
 ```
 
 ### Api docs
-To view the API docs, run the applictiona and go to `<url>/scalar/v1`
+To view the API docs, run the application and go to `<url>/scalar/v1`.
 
 ### SQLite
 

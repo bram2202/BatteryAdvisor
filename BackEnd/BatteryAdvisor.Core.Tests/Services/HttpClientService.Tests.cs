@@ -35,6 +35,30 @@ public class HttpClientServiceTests
     }
 
     [Fact]
+    public async Task PutAsync_SendsJsonContent()
+    {
+        HttpRequestMessage? capturedRequest = null;
+        string? capturedRequestBody = null;
+        var handler = new StubHttpMessageHandler(request =>
+        {
+            capturedRequest = request;
+            capturedRequestBody = request.Content?.ReadAsStringAsync().GetAwaiter().GetResult();
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("updated")
+            };
+        });     
+
+        var httpClient = new HttpClient(handler);
+        var service = new HttpClientService(httpClient);    
+        var result = await service.PutAsync<string>("https://example.com/items/1", new { Name = "Test Item" });
+        Assert.Equal("updated", result);
+        Assert.NotNull(capturedRequest);
+        Assert.NotNull(capturedRequestBody);
+        Assert.Contains("\"Name\":\"Test Item\"", capturedRequestBody);
+    }
+
+    [Fact]
     public async Task PostAsync_AppliesContentTypeHeaderToContent()
     {
         HttpRequestMessage? capturedRequest = null;
