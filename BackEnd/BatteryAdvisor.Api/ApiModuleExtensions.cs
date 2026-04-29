@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.Core.Services;
+using Scalar.AspNetCore;
 
 namespace BatteryAdvisor.Api;
 
@@ -24,6 +25,7 @@ public static class ApiModuleExtensions
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
         }
 
         if (!app.Environment.IsDevelopment())

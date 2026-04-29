@@ -19,6 +19,9 @@ BackEnd/BatteryAdvisor.Host/obj
 BackEnd/BatteryAdvisor.Host.Tests/bin
 BackEnd/BatteryAdvisor.Host.Tests/obj
 BackEnd/BatteryAdvisor.Host/BatteryAdvisor.db
+BackEnd/BatteryAdvisor.Host/BatteryAdvisor.db-shm
+BackEnd/BatteryAdvisor.Host/BatteryAdvisor.db-wal
+
 
 TestResults
 
