@@ -4,7 +4,6 @@
     <input
       pInputText
       id="username"
-      aria-describedby="username-help"
       [(ngModel)]="homeAssistantUrl"
     />
 
@@ -12,10 +11,11 @@
     <input
       pInputText
       id="password"
-      aria-describedby="password-help"
+      type="password"
+      autocomplete="off"
       [(ngModel)]="homeAssistantToken"
     />
 
-    <p-button label="Test Connection" (onClick)="testConnection()"/>
+    <p-button label="Test Connection" (onClick)="testConnection()" />
   </div>
 </div>
