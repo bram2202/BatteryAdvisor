@@ -27,5 +27,8 @@ TestResults
 
 Frontend/node_modules
 Frontend/dist
+Frontend/build
+Frontend/.env
 
 BackEnd/BatteryAdvisor.Host/config/appsettings.Local.json
+.gitignore

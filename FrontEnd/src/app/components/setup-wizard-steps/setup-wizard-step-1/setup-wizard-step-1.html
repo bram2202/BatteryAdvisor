@@ -1,0 +1,21 @@
+<div class="card flex justify-center">
+  <div class="flex flex-col gap-2">
+    <label for="username">Home Assistant URL</label>
+    <input
+      pInputText
+      id="username"
+      [(ngModel)]="homeAssistantUrl"
+    />
+
+    <label for="password">Home Assistant Long-Lived Access Token</label>
+    <input
+      pInputText
+      id="password"
+      type="password"
+      autocomplete="off"
+      [(ngModel)]="homeAssistantToken"
+    />
+
+    <p-button label="Test Connection" (onClick)="testConnection()" />
+  </div>
+</div>
