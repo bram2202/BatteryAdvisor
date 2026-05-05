@@ -14,6 +14,11 @@ public class WebSocketAuthenticationService : IWebSocketAuthenticationService
     private readonly ILogger<WebSocketAuthenticationService> _logger;
     private readonly IWebSocketMessageHelper _messageHelper;
 
+    private bool _isAuthenticated = false;
+    public bool IsAuthenticated => _isAuthenticated;
+
+    public void Reset() => _isAuthenticated = false;
+
     public WebSocketAuthenticationService(
         IWebSocketService webSocketService,
 
@@ -64,6 +69,7 @@ public class WebSocketAuthenticationService : IWebSocketAuthenticationService
             if (string.Equals(responseType, "auth_ok", StringComparison.OrdinalIgnoreCase))
             {
                 _logger.LogInformation("Home Assistant websocket authentication successful.");
+                _isAuthenticated = true;
                 return;
             }
 

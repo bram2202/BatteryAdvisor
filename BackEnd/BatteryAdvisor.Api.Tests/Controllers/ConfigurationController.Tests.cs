@@ -86,7 +86,7 @@ public class ConfigurationControllerTests
     public async Task GetConfigurationByKey_ReturnsNotFound_WhenKeyDoesNotExist()
     {
         // Arrange
-        const string key = "HAUrl";
+        const string key = "HomeAssistantUrl";
 
         var configurationServiceMock = new Mock<IConfigurationService>();
         configurationServiceMock
@@ -100,7 +100,7 @@ public class ConfigurationControllerTests
 
         // Assert
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
-        Assert.Equal("Configuration with key 'HAUrl' not found.", notFoundResult.Value);
+        Assert.Equal("Configuration with key 'HomeAssistantUrl' not found.", notFoundResult.Value);
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public class ConfigurationControllerTests
         var controller = new ConfigurationController(configurationServiceMock.Object);
 
         // Act
-        var actionResult = await controller.GetConfigurationByKey("HAUrl");
+        var actionResult = await controller.GetConfigurationByKey("HomeAssistantUrl");
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -308,7 +308,7 @@ public class ConfigurationControllerTests
         var controller = new ConfigurationController(configurationServiceMock.Object);
 
         // Act
-        var actionResult = await controller.DeleteConfiguration("HAToken");
+        var actionResult = await controller.DeleteConfiguration("HomeAssistantToken");
 
         // Assert
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
@@ -323,7 +323,7 @@ public class ConfigurationControllerTests
         var controller = new ConfigurationController(configurationServiceMock.Object);
 
         // Act
-        var actionResult = await controller.DeleteConfiguration("HAUrl");
+        var actionResult = await controller.DeleteConfiguration("HomeAssistantUrl");
 
         // Assert
         Assert.IsType<OkResult>(actionResult);

@@ -18,6 +18,8 @@ public class WebSocketService : IWebSocketService, IAsyncDisposable
         _logger = logger;
     }
 
+    public bool IsConnected => _socket is not null && _socket.State == WebSocketState.Open;
+
     public async Task<ClientWebSocket> GetOrConnectAsync(string url, CancellationToken cancellationToken)
     {
         if (_socket is not null && _socket.State == WebSocketState.Open)

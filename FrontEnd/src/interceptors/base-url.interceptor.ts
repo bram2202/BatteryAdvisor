@@ -1,7 +1,8 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { ConfigurationService } from '../services/api-services/api-test-service/configuration-service/configuration.service';
+
 import { inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ConfigurationService } from '../services/configuration-service/configuration.service';
 
 
 /**

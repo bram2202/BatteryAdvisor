@@ -19,8 +19,7 @@ public class WebSocketClient : IWebSocketClient
 
     private readonly ILogger<WebSocketClient> _logger;
 
-    private bool _isLoggedIn = false;
-    private int _messageIdCounter = 0;
+    private static int _messageIdCounter = 0;
 
     public WebSocketClient(
         IWebSocketService webSocketService,
@@ -130,10 +129,17 @@ public class WebSocketClient : IWebSocketClient
     private async Task CheckAndConnect()
     {
         // Step 1: Ensure we have a connected WebSocket
+        var wasConnected = _webSocketService.IsConnected;
         await EnsureConnectedAsync(CancellationToken.None);
 
+        // If the socket reconnected, the previous auth is no longer valid
+        if (!wasConnected)
+        {
+            _webSocketAuthenticationService.Reset();
+        }
+
         // Step 2: Authenticate if not already authenticated
-        if (!_isLoggedIn)
+        if (!_webSocketAuthenticationService.IsAuthenticated)
         {
             _logger.LogInformation("Authenticating WebSocket session with Home Assistant.");
 
@@ -147,8 +153,6 @@ public class WebSocketClient : IWebSocketClient
             await _webSocketAuthenticationService.AuthenticateAsync(
                 tokenConfiguration.Value,
                 CancellationToken.None);
-
-            _isLoggedIn = true;
         }       
     }
 

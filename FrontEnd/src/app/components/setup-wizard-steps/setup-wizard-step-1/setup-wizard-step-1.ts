@@ -16,7 +16,7 @@ import { PopupTypeEnum } from '../../../../enums/popup-type-enum';
 export class SetupWizardStep1 {
   homeAssistantUrl: string = 'http://homeassistant.local:8123';
   homeAssistantToken: string | undefined;
-  connectionVerified = false;
+  connectionVerified = true ; // TEMP: TEST ONLY
 
   private readonly apiTestService = inject(ApiTestService);
   private readonly popupService = inject(PopupService);
