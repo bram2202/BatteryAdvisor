@@ -1,0 +1,71 @@
+<section class="setup-wizard-page">
+  <h1>Setup Wizard</h1>
+
+  <p-stepper [value]="1" class="wizard-stepper">
+    <p-step-list>
+      <p-step [value]="1">Home Assistant</p-step>
+      <p-step [value]="2">Header II</p-step>
+      <p-step [value]="3">Header II</p-step>
+    </p-step-list>
+    <p-step-panels>
+      <p-step-panel [value]="1">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="step-panel-body">
+            <div class="step-content-card">
+              <app-setup-wizard-step-1 #step1></app-setup-wizard-step-1>
+            </div>
+          </div>
+          <div class="step-actions step-actions-end">
+            <p-button
+              label="Next"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              [disabled]="!step1.connectionVerified"
+              (onClick)="activateCallback(2)"
+            />
+          </div>
+        </ng-template>
+      </p-step-panel>
+      <p-step-panel [value]="2">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="step-panel-body">
+            <div class="step-content-card">
+              Content II
+            </div>
+          </div>
+          <div class="step-actions step-actions-between">
+            <p-button
+              label="Back"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              (onClick)="activateCallback(1)"
+            />
+            <p-button
+              label="Next"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              (onClick)="activateCallback(3)"
+            />
+          </div>
+        </ng-template>
+      </p-step-panel>
+      <p-step-panel [value]="3">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="step-panel-body">
+            <div class="step-content-card">
+              Content III
+            </div>
+          </div>
+          <div class="step-actions step-actions-start">
+            <p-button
+              label="Back"
+              icon="pi pi-arrow-left"
+              iconPos="right"
+              (onClick)="activateCallback(2)"
+            />
+          </div>
+        </ng-template>
+      </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
+</section>

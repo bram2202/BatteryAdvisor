@@ -25,7 +25,10 @@ BackEnd/BatteryAdvisor.Host/BatteryAdvisor.db-wal
 
 TestResults
 
-Frontend/node_modules
-Frontend/dist
+FrontEnd/node_modules
+FrontEnd/dist
+FrontEnd/build
+
 
 BackEnd/BatteryAdvisor.Host/config/appsettings.Local.json
+FrontEnd/.env
