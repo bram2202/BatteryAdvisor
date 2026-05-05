@@ -1,5 +1,4 @@
 using BatteryAdvisor.Api;
-using BatteryAdvisor.Core.ApplicationOptions;
 using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.Core.Services;
 using BatteryAdvisor.HA.Contracts.Clients;
@@ -18,17 +17,15 @@ builder.Configuration
     .AddJsonFile($"config/appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddJsonFile("config/appsettings.Local.json", optional: true, reloadOnChange: true);
 
-// Setup configuration
-builder.Services.Configure<ApplicationOptions>(
-    builder.Configuration.GetSection("ApplicationOptions")
-);
-
 
 // Setup services
 builder.Services.AddBatteryAdvisorApi();
 
 // Scoped ==> new instance per request
 // Singleton ==> same instance for entire application lifetime
+
+// HA Configuration Service
+builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
 
 // HA Services
 builder.Services.AddScoped<IRestClient, RestClient>();
@@ -38,12 +35,11 @@ builder.Services.AddScoped<IHomeAssistantRestService, HomeAssistantRestService>(
 
 // Core Services
 builder.Services.AddScoped<IDatabaseService, DatabaseService>();
-builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 builder.Services.AddSingleton<IWebSocketService, WebSocketService>();
 builder.Services.AddSingleton<IHomeAssistantWebSocketResponseService, HomeAssistantWebSocketResponseService>();
 builder.Services.AddSingleton<IWebSocketAuthenticationService, WebSocketAuthenticationService>();
-builder.Services.AddSingleton<IWebSocketClient, WebSocketClient>();
+builder.Services.AddScoped<IWebSocketClient, WebSocketClient>();
 
 // Database
 builder.Services.AddDbContext<BatteryAdvisorContext>(options =>

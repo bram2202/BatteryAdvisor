@@ -1,4 +1,3 @@
-using BatteryAdvisor.Core.ApplicationOptions;
 using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.HA.Contracts.Clients;
@@ -6,6 +5,7 @@ using BatteryAdvisor.HA.Contracts.Helpers;
 using BatteryAdvisor.HA.Contracts.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using BatteryAdvisor.Core.Contracts.Enums;
 
 namespace BatteryAdvisor.HA.Clients;
 
@@ -15,8 +15,7 @@ public class WebSocketClient : IWebSocketClient
     private readonly IHomeAssistantWebSocketResponseService _webSocketResponseService;
     private readonly IWebSocketAuthenticationService _webSocketAuthenticationService;
     private readonly IWebSocketMessageHelper _messageHelper;
-
-    private readonly ApplicationOptions _options;
+    private readonly IConfigurationService _configurationService;
 
     private readonly ILogger<WebSocketClient> _logger;
 
@@ -27,15 +26,15 @@ public class WebSocketClient : IWebSocketClient
         IWebSocketService webSocketService,
         IHomeAssistantWebSocketResponseService webSocketResponseService,
         IWebSocketAuthenticationService webSocketAuthenticationService,
-        IOptions<ApplicationOptions> options,
         ILogger<WebSocketClient> logger,
-        IWebSocketMessageHelper messageHelper)
+        IWebSocketMessageHelper messageHelper,
+        IConfigurationService configurationService)
     {
         _webSocketService = webSocketService;
         _webSocketResponseService = webSocketResponseService;
         _webSocketAuthenticationService = webSocketAuthenticationService;
         _logger = logger;
-        _options = options.Value;
+        _configurationService = configurationService;
         _messageHelper = messageHelper;
     }
 
@@ -137,8 +136,16 @@ public class WebSocketClient : IWebSocketClient
         if (!_isLoggedIn)
         {
             _logger.LogInformation("Authenticating WebSocket session with Home Assistant.");
+
+            // Get token from configuration
+            var tokenConfiguration = await _configurationService.GetConfigurationAsync(ConfigurationKeys.HomeAssistantToken);
+            if(tokenConfiguration is null || string.IsNullOrWhiteSpace(tokenConfiguration.Value)) 
+            {
+                throw new InvalidOperationException("Home Assistant token is not configured. Please configure the token before attempting to connect.");
+            }
+
             await _webSocketAuthenticationService.AuthenticateAsync(
-                _options.HomeAssistant.Token,
+                tokenConfiguration.Value,
                 CancellationToken.None);
 
             _isLoggedIn = true;
@@ -162,7 +169,16 @@ public class WebSocketClient : IWebSocketClient
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     private async Task EnsureConnectedAsync(CancellationToken cancellationToken)
     {
-        var websocketUrl = BuildHomeAssistantWebSocketUrl(_options.HomeAssistant.Url);
+            // Get URL from configuration
+            var urlConfiguration = await _configurationService.GetConfigurationAsync(ConfigurationKeys.HomeAssistantUrl);
+            if(urlConfiguration is null || string.IsNullOrWhiteSpace(urlConfiguration.Value)) 
+            {
+                throw new InvalidOperationException("Home Assistant URL is not configured. Please configure the URL before attempting to connect.");
+            }
+
+
+
+        var websocketUrl = BuildHomeAssistantWebSocketUrl(urlConfiguration.Value);
 
         _logger.LogDebug("Ensuring WebSocket connection to Home Assistant at {WebSocketUrl}.", websocketUrl);
 

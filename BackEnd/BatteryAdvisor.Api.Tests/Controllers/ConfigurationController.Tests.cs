@@ -17,12 +17,12 @@ public class ConfigurationControllerTests
         {
             new()
             {
-                Name = ConfigurationKeys.HAUrl,
+                Name = ConfigurationKeys.HomeAssistantUrl,
                 Value = "https://example.com"
             },
             new()
             {
-                Name = ConfigurationKeys.HAToken,
+                Name = ConfigurationKeys.HomeAssistantToken,
                 Value = "token"
             }
         };
@@ -42,8 +42,8 @@ public class ConfigurationControllerTests
         var response = Assert.IsAssignableFrom<IEnumerable<ConfigurationReadModel>>(okResult.Value);
 
         Assert.Equal(2, response.Count());
-        Assert.Contains(response, c => c.Name == ConfigurationKeys.HAUrl && c.Value == "https://example.com");
-        Assert.Contains(response, c => c.Name == ConfigurationKeys.HAToken && c.Value == "token");
+        Assert.Contains(response, c => c.Name == ConfigurationKeys.HomeAssistantUrl && c.Value == "https://example.com");
+        Assert.Contains(response, c => c.Name == ConfigurationKeys.HomeAssistantToken && c.Value == "token");
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class ConfigurationControllerTests
 
         var configurationServiceMock = new Mock<IConfigurationService>();
         configurationServiceMock
-            .Setup(s => s.GetConfigurationAsync(ConfigurationKeys.HAUrl))
+            .Setup(s => s.GetConfigurationAsync(ConfigurationKeys.HomeAssistantUrl))
             .ReturnsAsync((ConfigurationReadModel?)null);
 
         var controller = new ConfigurationController(configurationServiceMock.Object);
@@ -109,13 +109,13 @@ public class ConfigurationControllerTests
         // Arrange
         var model = new ConfigurationReadModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://example.com"
         };
 
         var configurationServiceMock = new Mock<IConfigurationService>();
         configurationServiceMock
-            .Setup(s => s.GetConfigurationAsync(ConfigurationKeys.HAUrl))
+            .Setup(s => s.GetConfigurationAsync(ConfigurationKeys.HomeAssistantUrl))
             .ReturnsAsync(model);
 
         var controller = new ConfigurationController(configurationServiceMock.Object);
@@ -127,7 +127,7 @@ public class ConfigurationControllerTests
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
         var response = Assert.IsType<ConfigurationReadModel>(okResult.Value);
 
-        Assert.Equal(ConfigurationKeys.HAUrl, response.Name);
+        Assert.Equal(ConfigurationKeys.HomeAssistantUrl, response.Name);
         Assert.Equal("https://example.com", response.Value);
     }
 
@@ -137,7 +137,7 @@ public class ConfigurationControllerTests
         // Arrange
         var createModel = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://example.com"
         };
 
@@ -160,7 +160,7 @@ public class ConfigurationControllerTests
         // Arrange
         var createModel = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = string.Empty
         };
 
@@ -185,7 +185,7 @@ public class ConfigurationControllerTests
         // Arrange
         var createModel = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://example.com"
         };
 
@@ -210,7 +210,7 @@ public class ConfigurationControllerTests
         // Arrange
         var createModel = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://updated.example.com"
         };
 
@@ -233,7 +233,7 @@ public class ConfigurationControllerTests
         // Arrange
         var createModel = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = string.Empty
         };
 
@@ -258,7 +258,7 @@ public class ConfigurationControllerTests
         // Arrange
         var createModel = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://example.com"
         };
 
@@ -302,7 +302,7 @@ public class ConfigurationControllerTests
         // Arrange
         var configurationServiceMock = new Mock<IConfigurationService>();
         configurationServiceMock
-            .Setup(s => s.DeleteConfigurationAsync(ConfigurationKeys.HAToken))
+            .Setup(s => s.DeleteConfigurationAsync(ConfigurationKeys.HomeAssistantToken))
             .ThrowsAsync(new InvalidOperationException("Configuration with key 'HAToken' does not exist."));
 
         var controller = new ConfigurationController(configurationServiceMock.Object);
@@ -328,7 +328,7 @@ public class ConfigurationControllerTests
         // Assert
         Assert.IsType<OkResult>(actionResult);
         configurationServiceMock.Verify(
-            s => s.DeleteConfigurationAsync(ConfigurationKeys.HAUrl),
+            s => s.DeleteConfigurationAsync(ConfigurationKeys.HomeAssistantUrl),
             Times.Once);
     }
 }
