@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BatteryAdvisor.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class HomeAssistantController : ControllerBase
 {
     private readonly IHomeAssistantRestService _homeAssistantService;

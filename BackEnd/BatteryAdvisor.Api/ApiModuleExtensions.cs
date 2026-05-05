@@ -26,6 +26,14 @@ public static class ApiModuleExtensions
         {
             app.MapOpenApi();
             app.MapScalarApiReference();
+
+            // Disable CORS
+            app.UseCors(policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
         }
 
         if (!app.Environment.IsDevelopment())
@@ -37,6 +45,4 @@ public static class ApiModuleExtensions
 
         return app;
     }
-
-
 }

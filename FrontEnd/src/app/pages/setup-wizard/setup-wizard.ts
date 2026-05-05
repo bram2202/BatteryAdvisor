@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 import { SetupWizardStep1 } from '../../components/setup-wizard-steps/setup-wizard-step-1/setup-wizard-step-1';
