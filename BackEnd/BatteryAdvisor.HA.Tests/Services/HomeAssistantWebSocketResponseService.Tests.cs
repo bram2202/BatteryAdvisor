@@ -140,6 +140,8 @@ public class HomeAssistantWebSocketResponseServiceTests
 
     private sealed class FakeWebSocketService(string response) : IWebSocketService
     {
+        public bool IsConnected => true;
+
         public Task<ClientWebSocket> GetOrConnectAsync(string url, CancellationToken cancellationToken)
             => throw new NotSupportedException();
 

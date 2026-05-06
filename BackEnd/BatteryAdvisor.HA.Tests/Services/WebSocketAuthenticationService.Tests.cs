@@ -1,10 +1,8 @@
 using BatteryAdvisor.Core.Contracts.Services;
-using BatteryAdvisor.Core.ApplicationOptions;
 using BatteryAdvisor.HA.Contracts.Helpers;
 using BatteryAdvisor.HA.Services;
 using BatteryAdvisor.HA.Helpers;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using System.Net.WebSockets;
 using System.Text.Json;
 
@@ -19,7 +17,7 @@ public class WebSocketAuthenticationServiceTests
         var accessToken = "test_access_token";
         var authOkResponse = JsonSerializer.Serialize(new { type = "auth_ok" });
         var webSocketService = new FakeWebSocketService(authOkResponse);
-        var authService = CreateAuthService(webSocketService, webSocketResponseTimeoutSeconds: 5);
+        var authService = CreateAuthService(webSocketService);
 
         // Act
         await authService.AuthenticateAsync(accessToken, CancellationToken.None);
@@ -35,7 +33,7 @@ public class WebSocketAuthenticationServiceTests
         var accessToken = "invalid_token";
         var authInvalidResponse = JsonSerializer.Serialize(new { type = "auth_invalid", message = "Invalid token" });
         var webSocketService = new FakeWebSocketService(authInvalidResponse);
-        var authService = CreateAuthService(webSocketService, webSocketResponseTimeoutSeconds: 5);
+        var authService = CreateAuthService(webSocketService);
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -52,7 +50,7 @@ public class WebSocketAuthenticationServiceTests
         var accessToken = "invalid_token";
         var authInvalidResponse = JsonSerializer.Serialize(new { type = "auth_invalid" });
         var webSocketService = new FakeWebSocketService(authInvalidResponse);
-        var authService = CreateAuthService(webSocketService, webSocketResponseTimeoutSeconds: 5);
+        var authService = CreateAuthService(webSocketService);
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -75,7 +73,7 @@ public class WebSocketAuthenticationServiceTests
         };
 
         var webSocketService = new MultiResponseFakeWebSocketService(responses);
-        var authService = CreateAuthService(webSocketService, webSocketResponseTimeoutSeconds: 5);
+        var authService = CreateAuthService(webSocketService);
 
         // Act
         await authService.AuthenticateAsync(accessToken, CancellationToken.None);
@@ -93,7 +91,7 @@ public class WebSocketAuthenticationServiceTests
         cts.Cancel();
 
         var webSocketService = new DelayedFakeWebSocketService();
-        var authService = CreateAuthService(webSocketService, webSocketResponseTimeoutSeconds: 5);
+        var authService = CreateAuthService(webSocketService);
 
         // Act & Assert
         await Assert.ThrowsAsync<TaskCanceledException>(
@@ -106,7 +104,7 @@ public class WebSocketAuthenticationServiceTests
         // Arrange
         var accessToken = "test_token";
         var webSocketService = new NeverRespondingFakeWebSocketService();
-        var authService = CreateAuthService(webSocketService, webSocketResponseTimeoutSeconds: 1);
+        var authService = CreateAuthService(webSocketService);
 
         // Act & Assert
         await Assert.ThrowsAsync<TaskCanceledException>(
@@ -117,20 +115,10 @@ public class WebSocketAuthenticationServiceTests
     /// Helper method to create a WebSocketAuthenticationService with the specified fake IWebSocketService and timeout configuration.
     /// </summary>
     private static WebSocketAuthenticationService CreateAuthService(
-        IWebSocketService webSocketService,
-        int webSocketResponseTimeoutSeconds)
+        IWebSocketService webSocketService)
     {
-        var options = Options.Create(new ApplicationOptions
-        {
-            HomeAssistant = new HomeAssistantOptions
-            {
-                WebSocketResponseTimeoutSeconds = webSocketResponseTimeoutSeconds
-            }
-        });
-
         return new WebSocketAuthenticationService(
             webSocketService,
-            options,
             NullLogger<WebSocketAuthenticationService>.Instance,
             new WebSocketMessageHelper());
     }
@@ -147,6 +135,8 @@ public class WebSocketAuthenticationServiceTests
         {
             _response = response;
         }
+
+        public bool IsConnected => true;
 
         public Task<ClientWebSocket> GetOrConnectAsync(string url, CancellationToken cancellationToken)
             => throw new NotSupportedException();
@@ -178,6 +168,8 @@ public class WebSocketAuthenticationServiceTests
             _responses = responses;
         }
 
+        public bool IsConnected => true;
+
         public Task<ClientWebSocket> GetOrConnectAsync(string url, CancellationToken cancellationToken)
             => throw new NotSupportedException();
 
@@ -201,6 +193,8 @@ public class WebSocketAuthenticationServiceTests
     /// </summary>
     private sealed class DelayedFakeWebSocketService : IWebSocketService
     {
+        public bool IsConnected => true;
+
         public Task<ClientWebSocket> GetOrConnectAsync(string url, CancellationToken cancellationToken)
             => throw new NotSupportedException();
 
@@ -222,6 +216,8 @@ public class WebSocketAuthenticationServiceTests
     /// </summary>
     private sealed class NeverRespondingFakeWebSocketService : IWebSocketService
     {
+        public bool IsConnected => true;
+
         public Task<ClientWebSocket> GetOrConnectAsync(string url, CancellationToken cancellationToken)
             => throw new NotSupportedException();
 
