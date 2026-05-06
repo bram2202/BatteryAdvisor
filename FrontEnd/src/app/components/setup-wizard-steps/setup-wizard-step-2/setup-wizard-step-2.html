@@ -1,5 +1,41 @@
-<div #visibilityTarget class="card flex justify-center">
-  <div class="flex flex-col gap-2">
-YOYOYOOY
+<div #visibilityTarget class="card flex justify-center w-full">
+  <div class="flex flex-col gap-2 w-1/2">
+
+    <label for="powerConsumptionEntities">Power Consumption Entities</label>
+    <p-multiselect
+      id="powerConsumptionEntities"
+      [options]="entities"
+      [(ngModel)]="selectedPowerConsumptionEntities"
+      optionLabel="friendlyName"
+      placeholder="Select Entities"
+      [maxSelectedLabels]="3"
+      class="w-full"
+      display="chip"
+    />
+
+    <label for="powerProductionEntities">Power Production Entities</label>
+    <p-multiselect
+      id="powerProductionEntities"
+      [options]="entities"
+      [(ngModel)]="selectedPowerProductionEntities"
+      optionLabel="friendlyName"
+      placeholder="Select Entities"
+      [maxSelectedLabels]="3"
+      class="w-full"
+      display="chip"
+    />  
+
+    <label for="pvEntities">PV Entities</label>
+    <p-multiselect
+      id="pvEntities"
+      [options]="entities"
+      [(ngModel)]="selectedPvEntities"
+      optionLabel="friendlyName"
+      placeholder="Select Entities"
+      [maxSelectedLabels]="3"
+      class="w-full"
+      display="chip"
+    />
+
   </div>
 </div>

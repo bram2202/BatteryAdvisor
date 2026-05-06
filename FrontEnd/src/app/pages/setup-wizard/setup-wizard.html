@@ -1,39 +1,45 @@
-<section class="setup-wizard-page">
-  <h1>Setup Wizard</h1>
+<section
+  class="min-h-full p-5 rounded-xl bg-[#f6fffd] border border-[#aee8de] text-[#0a3d4d] shadow-[0_10px_30px_rgba(10,61,77,0.08)]"
+>
+  <h1 class="mt-0 mb-3 text-2xl font-bold text-[#0f6f7a]">Setup Wizard</h1>
 
-  <p-stepper [value]="1" class="wizard-stepper">
+  <p-stepper [value]="1" class="basis-[50rem] w-full max-w-full">
     <p-step-list>
       <p-step [value]="1">Home Assistant</p-step>
-      <p-step [value]="2">Header II</p-step>
-      <p-step [value]="3">Header II</p-step>
+      <p-step [value]="2">Entities</p-step>
+      <p-step [value]="3">Summary</p-step>
     </p-step-list>
     <p-step-panels>
       <p-step-panel [value]="1">
         <ng-template #content let-activateCallback="activateCallback">
-          <div class="step-panel-body">
-            <div class="step-content-card">
+          <div class="flex flex-col min-h-48">
+            <div
+              class="flex-auto flex justify-center items-center font-medium"
+            >
               <app-setup-wizard-step-1 #step1></app-setup-wizard-step-1>
             </div>
           </div>
-          <div class="step-actions step-actions-end">
+          <div class="flex pt-6 justify-end">
             <p-button
               label="Next"
               icon="pi pi-arrow-right"
               iconPos="right"
               [disabled]="!step1.connectionVerified"
-              (onClick)="activateCallback(2)"
+              (onClick)="collectStep1(step1); activateCallback(2)"
             />
           </div>
         </ng-template>
       </p-step-panel>
       <p-step-panel [value]="2">
         <ng-template #content let-activateCallback="activateCallback">
-          <div class="step-panel-body">
-            <div class="step-content-card">
-              <app-setup-wizard-step-2 #step2></app-setup-wizard-step-2>
+          <div class="flex flex-col min-h-48">
+            <div
+              class="flex-auto flex justify-center items-center font-medium w-full"
+            >
+              <app-setup-wizard-step-2 #step2 class="w-full"> </app-setup-wizard-step-2>
             </div>
           </div>
-          <div class="step-actions step-actions-between">
+          <div class="flex pt-6 justify-between">
             <p-button
               label="Back"
               severity="secondary"
@@ -44,24 +50,38 @@
               label="Next"
               icon="pi pi-arrow-right"
               iconPos="right"
-              (onClick)="activateCallback(3)"
+              (onClick)="collectStep2(step2); activateCallback(3)"
             />
           </div>
         </ng-template>
       </p-step-panel>
       <p-step-panel [value]="3">
         <ng-template #content let-activateCallback="activateCallback">
-          <div class="step-panel-body">
-            <div class="step-content-card">
-              Content III
+          <div class="flex flex-col min-h-48">
+            <div
+              class="flex-auto flex justify-center items-center font-medium"
+            >
+              <app-setup-wizard-step-3
+                #step3
+                class="w-full"
+                [homeAssistantUrl]="homeAssistantUrl"
+                [selectedPowerConsumptionEntities]="selectedPowerConsumptionEntities"
+                [selectedPowerProductionEntities]="selectedPowerProductionEntities"
+                [selectedPvEntities]="selectedPvEntities"
+              />
             </div>
           </div>
-          <div class="step-actions step-actions-start">
+          <div class="flex pt-6 justify-between">
             <p-button
               label="Back"
+              severity="secondary"
               icon="pi pi-arrow-left"
-              iconPos="right"
               (onClick)="activateCallback(2)"
+            />
+            <p-button
+              label="Save"
+              icon="pi pi-save"
+              (onClick)="step3.save()"
             />
           </div>
         </ng-template>
