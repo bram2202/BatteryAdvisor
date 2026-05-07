@@ -13,6 +13,13 @@ public interface IConfigurationService
     Task AddAsync(ConfigurationCreateModel configuration);
 
     /// <summary>
+    /// Adds a new configuration or updates an existing one based on the provided key.
+    /// </summary>
+    /// <param name="configuration">Configuration payload to add or update.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task AddOrUpdateAsync(ConfigurationCreateModel configuration);
+
+    /// <summary>
     /// Retrieves a configuration by its key.
     /// </summary>
     /// <param name="key">The key of the configuration to retrieve.</param>

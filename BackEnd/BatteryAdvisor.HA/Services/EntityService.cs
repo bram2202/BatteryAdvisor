@@ -1,3 +1,6 @@
+using BatteryAdvisor.Core.Contracts.Enums;
+using BatteryAdvisor.Core.Contracts.Models;
+using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.Core.Models.DTO;
 using BatteryAdvisor.HA.Contracts.Clients;
 using BatteryAdvisor.HA.Contracts.Services;
@@ -5,15 +8,23 @@ using Microsoft.Extensions.Logging;
 
 namespace BatteryAdvisor.HA.Services;
 
-public class StatisticsService : IStatisticsService
+public class EntityService : IEntityService
 {
 
     private readonly IWebSocketClient _webSocketClient;
-    private readonly ILogger<StatisticsService> _logger;
-    public StatisticsService(IWebSocketClient webSocketClient, ILogger<StatisticsService> logger)
+    private readonly ILogger<EntityService> _logger;
+
+    private readonly IConfigurationService _configurationService;
+
+    public EntityService(
+        IWebSocketClient webSocketClient,
+        ILogger<EntityService> logger,
+        IConfigurationService configurationService
+    )
     {
         _webSocketClient = webSocketClient;
         _logger = logger;
+        _configurationService = configurationService;
     }
 
     public async Task<StatisticEntityDto[]> GetStatisticEntities()
@@ -57,5 +68,34 @@ public class StatisticsService : IStatisticsService
 
 
         return statisticEntities;
+    }
+
+    public Task SaveStatisticEntities(StatisticEntitiesSaveDto statisticEntity)
+    {
+        var powerConsumptionConfig = new ConfigurationCreateModel
+        {
+            Name = ConfigurationKeys.HomeAssistantPowerConsumptionEntities,
+            Value = string.Join(",", statisticEntity.PowerConsumptionEntities)
+        };
+
+        var powerProductionConfig = new ConfigurationCreateModel
+        {
+            Name = ConfigurationKeys.HomeAssistantPowerProductionEntities,
+            Value = string.Join(",", statisticEntity.PowerProductionEntities)
+        };
+
+
+        var pvEntitiesConfig = new ConfigurationCreateModel
+        {
+            Name = ConfigurationKeys.HomeAssistantPvEntities,
+            Value = string.Join(",", statisticEntity.PvEntities)
+        };
+
+        // Save all configurations in parallel
+        return Task.WhenAll(
+            _configurationService.AddOrUpdateAsync(powerConsumptionConfig),
+            _configurationService.AddOrUpdateAsync(powerProductionConfig),
+            _configurationService.AddOrUpdateAsync(pvEntitiesConfig)
+        );
     }
 }

@@ -1,12 +1,12 @@
 using System.Net.WebSockets;
-using BatteryAdvisor.Core.ApplicationOptions;
+using BatteryAdvisor.Core.Contracts.Enums;
+using BatteryAdvisor.Core.Contracts.Models;
 using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.HA.Clients;
 using BatteryAdvisor.HA.Contracts.Services;
 using BatteryAdvisor.HA.Helpers;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 
 namespace BatteryAdvisor.HA.Tests.Clients;
 
@@ -72,22 +72,15 @@ public class WebSocketClientTests
         FakeAuthenticationService authenticationService,
         string homeAssistantUrl)
     {
-        var options = Options.Create(new ApplicationOptions
-        {
-            HomeAssistant = new HomeAssistantOptions
-            {
-                Url = homeAssistantUrl,
-                Token = "token-123"
-            }
-        });
+        var configurationService = new FakeConfigurationService(homeAssistantUrl, "token-123");
 
         return new WebSocketClient(
             webSocketService,
             responseService,
             authenticationService,
-            options,
             NullLogger<WebSocketClient>.Instance,
-            new WebSocketMessageHelper());
+            new WebSocketMessageHelper(),
+            configurationService);
     }
 
     private sealed class FakeWebSocketService : IWebSocketService
@@ -95,6 +88,8 @@ public class WebSocketClientTests
         public string LastConnectUrl { get; private set; } = string.Empty;
         public string LastSentMessage { get; private set; } = string.Empty;
         public int SendCallCount { get; private set; }
+
+        public bool IsConnected => true;
 
         public Task<ClientWebSocket> GetOrConnectAsync(string url, CancellationToken cancellationToken)
         {
@@ -138,12 +133,50 @@ public class WebSocketClientTests
     {
         public int CallCount { get; private set; }
         public string LastToken { get; private set; } = string.Empty;
+        public bool IsAuthenticated { get; private set; }
 
         public Task AuthenticateAsync(string accessToken, CancellationToken cancellationToken)
         {
             CallCount++;
             LastToken = accessToken;
+            IsAuthenticated = true;
             return Task.CompletedTask;
         }
+
+        public void Reset() => IsAuthenticated = false;
+    }
+
+    private sealed class FakeConfigurationService : IConfigurationService
+    {
+        private readonly string _url;
+        private readonly string _token;
+
+        public FakeConfigurationService(string url, string token)
+        {
+            _url = url;
+            _token = token;
+        }
+
+        public Task<ConfigurationReadModel?> GetConfigurationAsync(ConfigurationKeys key)
+        {
+            var value = key switch
+            {
+                ConfigurationKeys.HomeAssistantUrl => _url,
+                ConfigurationKeys.HomeAssistantToken => _token,
+                _ => null
+            };
+
+            var result = value is not null
+                ? new ConfigurationReadModel { Name = key, Value = value }
+                : null;
+
+            return Task.FromResult<ConfigurationReadModel?>(result);
+        }
+
+        public Task AddAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
+        public Task AddOrUpdateAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
+        public Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync() => Task.FromResult(Enumerable.Empty<ConfigurationReadModel>());
+        public Task UpdateConfigurationAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
+        public Task DeleteConfigurationAsync(ConfigurationKeys key) => Task.CompletedTask;
     }
 }

@@ -1,10 +1,12 @@
-<div class="card flex justify-center">
+<div class="p-5 flex justify-center">
   <div class="flex flex-col gap-2">
     <label for="username">Home Assistant URL</label>
     <input
       pInputText
       id="username"
-      [(ngModel)]="homeAssistantUrl"
+      class="w-96"
+      [ngModel]="homeAssistantUrlSignal()"
+      (ngModelChange)="homeAssistantUrlSignal.set($event)"
     />
 
     <label for="password">Home Assistant Long-Lived Access Token</label>
@@ -13,7 +15,9 @@
       id="password"
       type="password"
       autocomplete="off"
-      [(ngModel)]="homeAssistantToken"
+      class="w-96"
+      [ngModel]="homeAssistantTokenSignal()"
+      (ngModelChange)="homeAssistantTokenSignal.set($event)"
     />
 
     <p-button label="Test Connection" (onClick)="testConnection()" />

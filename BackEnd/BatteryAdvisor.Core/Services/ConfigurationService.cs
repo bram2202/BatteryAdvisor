@@ -49,6 +49,41 @@ public class ConfigurationService : IConfigurationService
         await _databaseService.AddAsync(entity);
     }
 
+    public Task AddOrUpdateAsync(ConfigurationCreateModel configuration)
+    {
+        if (!Enum.IsDefined(configuration.Name))
+        {
+            throw new ArgumentException($"Invalid configuration name '{configuration.Name}'.", nameof(configuration));
+        }
+
+        if (string.IsNullOrWhiteSpace(configuration.Value))
+        {
+            throw new ArgumentException("Configuration value cannot be empty.", nameof(configuration));
+        }
+
+        // Check if configuration already exists
+        var existingConfiguration = _context.Configurations
+            .SingleOrDefault(x => x.Name == configuration.Name);
+
+        if (existingConfiguration is null)
+        {
+            // If it doesn't exist, add a new configuration
+            var entity = new ConfigurationModel
+            {
+                Id = Guid.NewGuid(),
+                Name = configuration.Name,
+                Value = configuration.Value.Trim()
+            };
+            return _databaseService.AddAsync(entity);
+        }
+        else
+        {
+            // If it exists, update the existing configuration
+            existingConfiguration.Value = configuration.Value.Trim();
+            return _databaseService.UpdateAsync(existingConfiguration);
+        }
+    }
+
     public async Task<ConfigurationReadModel?> GetConfigurationAsync(ConfigurationKeys key)
     {
         if (!Enum.IsDefined(key))

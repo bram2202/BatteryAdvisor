@@ -4,7 +4,6 @@ using BatteryAdvisor.HA.Contracts.Helpers;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using BatteryAdvisor.Core.ApplicationOptions;
 using BatteryAdvisor.Core.Models.Response;
 
 namespace BatteryAdvisor.HA.Services;
@@ -12,19 +11,22 @@ namespace BatteryAdvisor.HA.Services;
 public class WebSocketAuthenticationService : IWebSocketAuthenticationService
 {
     private readonly IWebSocketService _webSocketService;
-    private readonly ApplicationOptions _options;
     private readonly ILogger<WebSocketAuthenticationService> _logger;
     private readonly IWebSocketMessageHelper _messageHelper;
 
+    private bool _isAuthenticated = false;
+    public bool IsAuthenticated => _isAuthenticated;
+
+    public void Reset() => _isAuthenticated = false;
+
     public WebSocketAuthenticationService(
         IWebSocketService webSocketService,
-        IOptions<ApplicationOptions> options,
+
         ILogger<WebSocketAuthenticationService> logger,
         IWebSocketMessageHelper messageHelper
     )
     {
         _webSocketService = webSocketService;
-        _options = options.Value;
         _logger = logger;
         _messageHelper = messageHelper;
     }
@@ -47,7 +49,7 @@ public class WebSocketAuthenticationService : IWebSocketAuthenticationService
         CancellationToken cancellationToken)
     {
 
-        var timeout = TimeSpan.FromSeconds(_options.HomeAssistant.WebSocketResponseTimeoutSeconds);
+        var timeout = TimeSpan.FromSeconds(30); // Default timeout value
         using var timeoutCts = new CancellationTokenSource(timeout);
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
 
@@ -67,6 +69,7 @@ public class WebSocketAuthenticationService : IWebSocketAuthenticationService
             if (string.Equals(responseType, "auth_ok", StringComparison.OrdinalIgnoreCase))
             {
                 _logger.LogInformation("Home Assistant websocket authentication successful.");
+                _isAuthenticated = true;
                 return;
             }
 

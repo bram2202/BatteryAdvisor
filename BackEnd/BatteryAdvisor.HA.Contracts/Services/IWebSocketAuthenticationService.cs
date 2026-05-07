@@ -3,6 +3,16 @@ namespace BatteryAdvisor.HA.Contracts.Services;
 public interface IWebSocketAuthenticationService
 {
     /// <summary>
+    /// Indicates whether the WebSocket session has been successfully authenticated.
+    /// </summary>
+    bool IsAuthenticated { get; }
+
+    /// <summary>
+    /// Resets the authentication state, e.g. after a reconnect.
+    /// </summary>
+    void Reset();
+
+    /// <summary>
     /// Sends the authentication message to Home Assistant over the WebSocket connection
     /// and waits for a successful authentication response. Throws an exception if authentication fails.
     /// </summary>

@@ -1,3 +1,4 @@
+using BatteryAdvisor.Core.Models.DTO;
 using BatteryAdvisor.HA.Contracts.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,17 +8,31 @@ namespace BatteryAdvisor.Api.Controllers;
 [Route("[controller]")]
 public class EntityController : ControllerBase
 {
-    private readonly IStatisticsService _statisticsService;
+    private readonly IEntityService _entityService;
 
-    public EntityController(IStatisticsService statisticsService)
+    public EntityController(IEntityService entityService)
     {
-        _statisticsService = statisticsService;
+        _entityService = entityService;
     }
 
     [HttpGet("entities")]
     public async Task<IActionResult> GetStatisticEntities()
     {
-        var statisticEntities = await _statisticsService.GetStatisticEntities();
+        var statisticEntities = await _entityService.GetStatisticEntities();
         return Ok(statisticEntities);
+    }
+
+    [HttpPost("statistic-entities")]
+    public async Task<IActionResult> SaveStatisticEntity([FromBody] StatisticEntitiesSaveDto statisticEntity)
+    {
+        try
+        {
+            await _entityService.SaveStatisticEntities(statisticEntity);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }
