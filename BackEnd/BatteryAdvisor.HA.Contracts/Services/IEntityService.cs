@@ -1,12 +1,22 @@
+using BatteryAdvisor.Core.Models.DTO;
+
 namespace BatteryAdvisor.HA.Contracts.Services;
 
-public interface IHomeAssistantRestService
+public interface IEntityService
 {
     /// <summary>
-    /// Tests the connection to the Home Assistant API using the provided URL and token.
+    /// Get a list of all statistic entities in Home Assistant, 
+    /// along with their friendly name, unit of measurement, display unit of measurement, state and icon.
     /// </summary>
-    /// <param name="url">The URL of the Home Assistant API.</param>
-    /// <param name="token">The authentication token for the Home Assistant API.</param>
-    /// <returns>Boolean indicating whether the connection was successful.</returns>
-    Task<bool> TestConnectionAsync(string url, string token);
+    /// <returns></returns>
+    Task<StatisticEntityDto[]> GetStatisticEntities();
+
+
+    /// <summary>
+    /// Save the given statistic entities to the database.
+    ///  This will be used to keep track of which entities are used for which purpose (PV, power production, power consumption).
+    /// </summary>
+    /// <param name="statisticEntity"></param>
+    /// <returns></returns>
+    Task SaveStatisticEntities(StatisticEntitiesSaveDto statisticEntity);
 }

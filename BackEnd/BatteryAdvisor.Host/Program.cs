@@ -30,7 +30,7 @@ builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
 // HA Services
 builder.Services.AddScoped<IRestClient, RestClient>();
 builder.Services.AddSingleton<IWebSocketMessageHelper, WebSocketMessageHelper>();
-builder.Services.AddScoped<IStatisticsService, StatisticsService>();
+builder.Services.AddScoped<IEntityService, EntityService>();
 builder.Services.AddScoped<IHomeAssistantRestService, HomeAssistantRestService>();
 
 // Core Services

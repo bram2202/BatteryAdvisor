@@ -45,7 +45,7 @@ public class StatisticsServiceTests
         };
 
         var webSocketClient = new FakeWebSocketClient(statisticIds, entities);
-        var service = new StatisticsService(webSocketClient, NullLogger<StatisticsService>.Instance);
+        var service = new StatisticsService(webSocketClient, NullLogger<EntityService>.Instance);
 
         // Act
         var result = await service.GetStatisticEntities();
@@ -84,7 +84,7 @@ public class StatisticsServiceTests
         };
 
         var webSocketClient = new FakeWebSocketClient(statisticIds, entities);
-        var service = new StatisticsService(webSocketClient, NullLogger<StatisticsService>.Instance);
+        var service = new StatisticsService(webSocketClient, NullLogger<EntityService>.Instance);
 
         // Act
         var result = await service.GetStatisticEntities();
@@ -103,7 +103,7 @@ public class StatisticsServiceTests
     {
         // Arrange
         var webSocketClient = new FakeWebSocketClient(null, Array.Empty<EntityModel>());
-        var service = new StatisticsService(webSocketClient, NullLogger<StatisticsService>.Instance);
+        var service = new StatisticsService(webSocketClient, NullLogger<EntityService>.Instance);
 
         // Act
         var action = () => service.GetStatisticEntities();
@@ -117,7 +117,7 @@ public class StatisticsServiceTests
     {
         // Arrange
         var webSocketClient = new FakeWebSocketClient(Array.Empty<StaticIdModel>(), null);
-        var service = new StatisticsService(webSocketClient, NullLogger<StatisticsService>.Instance);
+        var service = new StatisticsService(webSocketClient, NullLogger<EntityService>.Instance);
 
         // Act
         var action = () => service.GetStatisticEntities();
