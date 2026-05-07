@@ -11,4 +11,12 @@ public interface IStatisticsService
     /// <returns></returns>
     Task<StatisticEntityDto[]> GetStatisticEntities();
 
+
+    /// <summary>
+    /// Save the given statistic entities to the database.
+    ///  This will be used to keep track of which entities are used for which purpose (PV, power production, power consumption).
+    /// </summary>
+    /// <param name="statisticEntity"></param>
+    /// <returns></returns>
+    Task SaveStatisticEntities(StatisticEntitiesSaveDto statisticEntity);
 }

@@ -16,7 +16,12 @@
             <div
               class="flex-auto flex justify-center items-center font-medium"
             >
-              <app-setup-wizard-step-1 #step1></app-setup-wizard-step-1>
+              <app-setup-wizard-step-1
+                #step1
+                [homeAssistantUrlSignal]="homeAssistantUrl"
+                [homeAssistantTokenSignal]="homeAssistantToken"
+              >
+              </app-setup-wizard-step-1>
             </div>
           </div>
           <div class="flex pt-6 justify-end">
@@ -24,8 +29,8 @@
               label="Next"
               icon="pi pi-arrow-right"
               iconPos="right"
-              [disabled]="!step1.connectionVerified"
-              (onClick)="collectStep1(step1); activateCallback(2)"
+              [disabled]="!step1.connectionVerified()"
+              (onClick)="activateCallback(2)"
             />
           </div>
         </ng-template>
@@ -36,7 +41,14 @@
             <div
               class="flex-auto flex justify-center items-center font-medium w-full"
             >
-              <app-setup-wizard-step-2 #step2 class="w-full"> </app-setup-wizard-step-2>
+              <app-setup-wizard-step-2
+                #step2
+                class="w-full"
+                [selectedPowerConsumptionEntitiesSignal]="selectedPowerConsumptionEntities"
+                [selectedPowerProductionEntitiesSignal]="selectedPowerProductionEntities"
+                [selectedPvEntitiesSignal]="selectedPvEntities"
+              >
+              </app-setup-wizard-step-2>
             </div>
           </div>
           <div class="flex pt-6 justify-between">
@@ -50,7 +62,8 @@
               label="Next"
               icon="pi pi-arrow-right"
               iconPos="right"
-              (onClick)="collectStep2(step2); activateCallback(3)"
+              [disabled]="!step2.canProceed"
+              (onClick)="activateCallback(3)"
             />
           </div>
         </ng-template>
@@ -64,10 +77,10 @@
               <app-setup-wizard-step-3
                 #step3
                 class="w-full"
-                [homeAssistantUrl]="homeAssistantUrl"
-                [selectedPowerConsumptionEntities]="selectedPowerConsumptionEntities"
-                [selectedPowerProductionEntities]="selectedPowerProductionEntities"
-                [selectedPvEntities]="selectedPvEntities"
+                [homeAssistantUrlSignal]="homeAssistantUrl"
+                [selectedPowerConsumptionEntitiesSignal]="selectedPowerConsumptionEntities"
+                [selectedPowerProductionEntitiesSignal]="selectedPowerProductionEntities"
+                [selectedPvEntitiesSignal]="selectedPvEntities"
               />
             </div>
           </div>
@@ -81,7 +94,7 @@
             <p-button
               label="Save"
               icon="pi pi-save"
-              (onClick)="step3.save()"
+              (onClick)="save()"
             />
           </div>
         </ng-template>

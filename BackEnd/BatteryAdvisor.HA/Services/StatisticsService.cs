@@ -58,4 +58,9 @@ public class StatisticsService : IStatisticsService
 
         return statisticEntities;
     }
+
+    public Task SaveStatisticEntities(StatisticEntitiesSaveDto statisticEntity)
+    {
+        throw new NotImplementedException();
+    }
 }

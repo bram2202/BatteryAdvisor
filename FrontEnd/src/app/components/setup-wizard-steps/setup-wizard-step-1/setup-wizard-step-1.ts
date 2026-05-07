@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, Input, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ApiTestService } from '../../../../services/api-services/api-test-service/api-test-service';
 import { PopupService } from '../../../../services/popup-service/popup-service';
 import { PopupTypeEnum } from '../../../../enums/popup-type-enum';
+import { WritableSignal } from '@angular/core';
 
 @Component({
   selector: 'app-setup-wizard-step-1',
@@ -14,18 +15,19 @@ import { PopupTypeEnum } from '../../../../enums/popup-type-enum';
   styleUrl: './setup-wizard-step-1.scss',
 })
 export class SetupWizardStep1 {
-  homeAssistantUrl: string = 'http://homeassistant.local:8123';
-  homeAssistantToken: string | undefined;
-  connectionVerified = true ; // TEMP: TEST ONLY
+  @Input() homeAssistantUrlSignal!: WritableSignal<string>;
+  @Input() homeAssistantTokenSignal!: WritableSignal<string | undefined>;
+
+  connectionVerified = signal(true); // TEMP: TEST ONLY
 
   private readonly apiTestService = inject(ApiTestService);
   private readonly popupService = inject(PopupService);
 
   testConnection() {
     this.apiTestService
-      .testApiConnection(this.homeAssistantUrl, this.homeAssistantToken!)
+      .testApiConnection(this.homeAssistantUrlSignal(), this.homeAssistantTokenSignal()!)
       .then(() => {
-        this.connectionVerified = true;
+        this.connectionVerified.set(true);
         this.popupService.showToast(
           PopupTypeEnum.Success,
           'Connection Successful',
@@ -33,7 +35,7 @@ export class SetupWizardStep1 {
         );
       })
       .catch((error) => {
-        this.connectionVerified = false
+        this.connectionVerified.set(false);
         console.error('Connection failed:', error);
         this.popupService.showToast(
           PopupTypeEnum.Error,

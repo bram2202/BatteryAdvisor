@@ -2,12 +2,12 @@
 
   <div class="flex flex-col gap-1">
     <span class="text-lg font-semibold text-[#0f6f7a]">Home Assistant URL</span>
-    <span class="text-sm">{{ homeAssistantUrl || '—' }}</span>
+    <span class="text-sm">{{ homeAssistantUrlSignal() || '—' }}</span>
   </div>
 
   <div class="flex flex-col gap-1">
     <span class="text-lg font-semibold text-[#0f6f7a]">Power Consumption Entities</span>
-    @for (e of selectedPowerConsumptionEntities; track e.entityId) {
+    @for (e of selectedPowerConsumptionEntitiesSignal(); track e.entityId) {
       <span class="text-sm">{{ e.friendlyName }} <span class="text-gray-400 italic">({{e.entityId}})</span></span>
     } @empty {
       <span class="text-sm text-gray-400">None selected</span>
@@ -16,7 +16,7 @@
 
   <div class="flex flex-col gap-1">
     <span class="text-lg font-semibold text-[#0f6f7a]">Power Production Entities</span>
-    @for (e of selectedPowerProductionEntities; track e.entityId) {
+    @for (e of selectedPowerProductionEntitiesSignal(); track e.entityId) {
       <span class="text-sm">{{ e.friendlyName }} <span class="text-gray-400 italic">({{e.entityId}})</span></span>
     } @empty {
       <span class="text-sm text-gray-400">None selected</span>
@@ -25,7 +25,7 @@
 
   <div class="flex flex-col gap-1">
     <span class="text-lg font-semibold text-[#0f6f7a]">PV Entities</span>
-    @for (e of selectedPvEntities; track e.entityId) {
+    @for (e of selectedPvEntitiesSignal(); track e.entityId) {
       <span class="text-sm">{{ e.friendlyName }} <span class="text-gray-400 italic">({{e.entityId}})</span></span>
     } @empty {
       <span class="text-sm text-gray-400">None selected</span>

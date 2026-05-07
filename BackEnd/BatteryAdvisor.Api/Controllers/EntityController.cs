@@ -1,3 +1,4 @@
+using BatteryAdvisor.Core.Models.DTO;
 using BatteryAdvisor.HA.Contracts.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,5 +20,19 @@ public class EntityController : ControllerBase
     {
         var statisticEntities = await _statisticsService.GetStatisticEntities();
         return Ok(statisticEntities);
+    }
+
+    [HttpPost("statistic-entities")]
+    public async Task<IActionResult> SaveStatisticEntity([FromBody] StatisticEntitiesSaveDto statisticEntity)
+    {
+        try
+        {
+            await _statisticsService.SaveStatisticEntities(statisticEntity);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

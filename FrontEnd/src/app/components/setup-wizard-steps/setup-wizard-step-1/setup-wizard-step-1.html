@@ -5,7 +5,8 @@
       pInputText
       id="username"
       class="w-96"
-      [(ngModel)]="homeAssistantUrl"
+      [ngModel]="homeAssistantUrlSignal()"
+      (ngModelChange)="homeAssistantUrlSignal.set($event)"
     />
 
     <label for="password">Home Assistant Long-Lived Access Token</label>
@@ -15,7 +16,8 @@
       type="password"
       autocomplete="off"
       class="w-96"
-      [(ngModel)]="homeAssistantToken"
+      [ngModel]="homeAssistantTokenSignal()"
+      (ngModelChange)="homeAssistantTokenSignal.set($event)"
     />
 
     <p-button label="Test Connection" (onClick)="testConnection()" />

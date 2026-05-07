@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { EntityDto } from '../../../../models/entity-dto';
-
+import { WritableSignal } from '@angular/core';
 
 @Component({
   selector: 'app-setup-wizard-step-3',
@@ -11,12 +11,8 @@ import { EntityDto } from '../../../../models/entity-dto';
   styleUrl: './setup-wizard-step-3.scss',
 })
 export class SetupWizardStep3 {
-  @Input() homeAssistantUrl: string = '';
-  @Input() selectedPowerConsumptionEntities: EntityDto[] = [];
-  @Input() selectedPowerProductionEntities: EntityDto[] = [];
-  @Input() selectedPvEntities: EntityDto[] = [];
-
-  save(): void {
-    // Implementation pending
-  }
+  @Input() homeAssistantUrlSignal!: WritableSignal<string>;
+  @Input() selectedPowerConsumptionEntitiesSignal!: WritableSignal<EntityDto[]>;
+  @Input() selectedPowerProductionEntitiesSignal!: WritableSignal<EntityDto[]>;
+  @Input() selectedPvEntitiesSignal!: WritableSignal<EntityDto[]>;
 }
