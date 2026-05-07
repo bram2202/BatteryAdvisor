@@ -1,3 +1,6 @@
+using BatteryAdvisor.Core.Contracts.Enums;
+using BatteryAdvisor.Core.Contracts.Models;
+using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.Core.Models.HomeAssistant;
 using BatteryAdvisor.HA.Contracts.Clients;
 using BatteryAdvisor.HA.Services;
@@ -45,7 +48,7 @@ public class StatisticsServiceTests
         };
 
         var webSocketClient = new FakeWebSocketClient(statisticIds, entities);
-        var service = new StatisticsService(webSocketClient, NullLogger<EntityService>.Instance);
+        var service = new EntityService(webSocketClient, NullLogger<EntityService>.Instance, new FakeConfigurationService());
 
         // Act
         var result = await service.GetStatisticEntities();
@@ -84,7 +87,7 @@ public class StatisticsServiceTests
         };
 
         var webSocketClient = new FakeWebSocketClient(statisticIds, entities);
-        var service = new StatisticsService(webSocketClient, NullLogger<EntityService>.Instance);
+        var service = new EntityService(webSocketClient, NullLogger<EntityService>.Instance, new FakeConfigurationService());
 
         // Act
         var result = await service.GetStatisticEntities();
@@ -103,10 +106,10 @@ public class StatisticsServiceTests
     {
         // Arrange
         var webSocketClient = new FakeWebSocketClient(null, Array.Empty<EntityModel>());
-        var service = new StatisticsService(webSocketClient, NullLogger<EntityService>.Instance);
+        var service = new EntityService(webSocketClient, NullLogger<EntityService>.Instance, new FakeConfigurationService());
 
         // Act
-        var action = () => service.GetStatisticEntities();
+        var action = async () => await service.GetStatisticEntities();
 
         // Assert
         await Assert.ThrowsAsync<InvalidOperationException>(action);
@@ -117,10 +120,10 @@ public class StatisticsServiceTests
     {
         // Arrange
         var webSocketClient = new FakeWebSocketClient(Array.Empty<StaticIdModel>(), null);
-        var service = new StatisticsService(webSocketClient, NullLogger<EntityService>.Instance);
+        var service = new EntityService(webSocketClient, NullLogger<EntityService>.Instance, new FakeConfigurationService());
 
         // Act
-        var action = () => service.GetStatisticEntities();
+        var action = async () => await service.GetStatisticEntities();
 
         // Assert
         await Assert.ThrowsAsync<InvalidOperationException>(action);
@@ -145,5 +148,15 @@ public class StatisticsServiceTests
 
         public Task<StatisticsDuringPeriodModel[]> GetStatisticsDuringPeriod(string statisticId, string startTime, string endTime)
             => throw new NotSupportedException();
+    }
+
+    private sealed class FakeConfigurationService : IConfigurationService
+    {
+        public Task AddAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
+        public Task AddOrUpdateAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
+        public Task<ConfigurationReadModel?> GetConfigurationAsync(ConfigurationKeys key) => Task.FromResult<ConfigurationReadModel?>(null);
+        public Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync() => Task.FromResult(Enumerable.Empty<ConfigurationReadModel>());
+        public Task UpdateConfigurationAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
+        public Task DeleteConfigurationAsync(ConfigurationKeys key) => Task.CompletedTask;
     }
 }

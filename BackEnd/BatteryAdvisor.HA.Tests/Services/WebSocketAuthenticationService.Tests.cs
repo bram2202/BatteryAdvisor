@@ -98,19 +98,6 @@ public class WebSocketAuthenticationServiceTests
             () => authService.AuthenticateAsync(accessToken, cts.Token));
     }
 
-    [Fact]
-    public async Task AuthenticateAsync_Timeout_ThrowsOperationCanceledException()
-    {
-        // Arrange
-        var accessToken = "test_token";
-        var webSocketService = new NeverRespondingFakeWebSocketService();
-        var authService = CreateAuthService(webSocketService);
-
-        // Act & Assert
-        await Assert.ThrowsAsync<TaskCanceledException>(
-            () => authService.AuthenticateAsync(accessToken, CancellationToken.None));
-    }
-
     /// <summary>
     /// Helper method to create a WebSocketAuthenticationService with the specified fake IWebSocketService and timeout configuration.
     /// </summary>

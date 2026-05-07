@@ -54,11 +54,11 @@ public class ConfigurationControllerTests
         var controller = new ConfigurationController(configurationServiceMock.Object);
 
         // Act
-        var actionResult = await controller.GetConfigurationByKey("2");
+        var actionResult = await controller.GetConfigurationByKey("100");
 
         // Assert
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult);
-        Assert.Equal("Invalid configuration key: 2", badRequestResult.Value);
+        Assert.Equal("Invalid configuration key: 100", badRequestResult.Value);
         configurationServiceMock.Verify(
             s => s.GetConfigurationAsync(It.IsAny<ConfigurationKeys>()),
             Times.Never);
