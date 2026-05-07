@@ -34,12 +34,12 @@ public class EntityControllerTests
             }
         };
 
-        var statisticsServiceMock = new Mock<IStatisticsService>();
-        statisticsServiceMock
+        var entityServiceMock = new Mock<IEntityService>();
+        entityServiceMock
             .Setup(s => s.GetStatisticEntities())
             .ReturnsAsync(statisticEntities);
 
-        var controller = new EntityController(statisticsServiceMock.Object);
+        var controller = new EntityController(entityServiceMock.Object);
 
         // Act
         var actionResult = await controller.GetStatisticEntities();
@@ -52,19 +52,19 @@ public class EntityControllerTests
         Assert.Equal("sensor.energy_import", response[0].EntityId);
         Assert.Equal("sensor.energy_export", response[1].EntityId);
 
-        statisticsServiceMock.Verify(s => s.GetStatisticEntities(), Times.Once);
+        entityServiceMock.Verify(s => s.GetStatisticEntities(), Times.Once);
     }
 
     [Fact]
     public async Task GetStatisticEntities_ReturnsOkWithEmptyArray_WhenServiceReturnsNoEntities()
     {
         // Arrange
-        var statisticsServiceMock = new Mock<IStatisticsService>();
-        statisticsServiceMock
+        var entityServiceMock = new Mock<IEntityService>();
+        entityServiceMock
             .Setup(s => s.GetStatisticEntities())
             .ReturnsAsync(Array.Empty<StatisticEntityDto>());
 
-        var controller = new EntityController(statisticsServiceMock.Object);
+        var controller = new EntityController(entityServiceMock.Object);
 
         // Act
         var actionResult = await controller.GetStatisticEntities();
@@ -74,6 +74,6 @@ public class EntityControllerTests
         var response = Assert.IsAssignableFrom<StatisticEntityDto[]>(okResult.Value);
 
         Assert.Empty(response);
-        statisticsServiceMock.Verify(s => s.GetStatisticEntities(), Times.Once);
+        entityServiceMock.Verify(s => s.GetStatisticEntities(), Times.Once);
     }
 }

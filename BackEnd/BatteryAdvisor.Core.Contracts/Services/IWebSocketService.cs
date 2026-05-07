@@ -5,6 +5,11 @@ namespace BatteryAdvisor.Core.Contracts.Services;
 public interface IWebSocketService
 {
     /// <summary>
+    /// Gets whether the WebSocket is currently open.
+    /// </summary>
+    bool IsConnected { get; }
+
+    /// <summary>
     /// Gets an open WebSocket connection to the specified URL, 
     /// or establishes a new one if necessary.
     /// </summary>

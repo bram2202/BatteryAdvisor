@@ -31,7 +31,7 @@ public class ConfigurationServiceTests
         var service = CreateService(context);
         var config = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://example.com"
         };
 
@@ -39,7 +39,7 @@ public class ConfigurationServiceTests
         await service.AddAsync(config);
 
         // Assert
-        var result = await context.Configurations.SingleOrDefaultAsync(x => x.Name == ConfigurationKeys.HAUrl);
+        var result = await context.Configurations.SingleOrDefaultAsync(x => x.Name == ConfigurationKeys.HomeAssistantUrl);
         Assert.NotNull(result);
         Assert.Equal("https://example.com", result.Value);
     }
@@ -52,7 +52,7 @@ public class ConfigurationServiceTests
         var service = CreateService(context);
         var config = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = ""
         };
 
@@ -69,7 +69,7 @@ public class ConfigurationServiceTests
         var service = CreateService(context);
         var config = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "   "
         };
 
@@ -87,13 +87,13 @@ public class ConfigurationServiceTests
 
         var config1 = new ConfigurationCreateModel 
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://example.com"
         };
 
         var config2 = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://other.com"
         };
 
@@ -128,7 +128,7 @@ public class ConfigurationServiceTests
         var service = CreateService(context);
         var config = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAToken,
+            Name = ConfigurationKeys.HomeAssistantToken,
             Value = "  token123  "
         };
 
@@ -136,7 +136,7 @@ public class ConfigurationServiceTests
         await service.AddAsync(config);
 
         // Assert
-        var result = await context.Configurations.SingleAsync(x => x.Name == ConfigurationKeys.HAToken);
+        var result = await context.Configurations.SingleAsync(x => x.Name == ConfigurationKeys.HomeAssistantToken);
         Assert.Equal("token123", result.Value);
     }
 
@@ -148,7 +148,7 @@ public class ConfigurationServiceTests
         var service = CreateService(context);
         var config = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://example.com"
         };
 
@@ -156,7 +156,7 @@ public class ConfigurationServiceTests
         await service.AddAsync(config);
 
         // Assert
-        var result = await context.Configurations.SingleAsync(x => x.Name == ConfigurationKeys.HAUrl);
+        var result = await context.Configurations.SingleAsync(x => x.Name == ConfigurationKeys.HomeAssistantUrl);
         Assert.NotEqual(Guid.Empty, result.Id);
     }
 
@@ -170,17 +170,17 @@ public class ConfigurationServiceTests
         context.Configurations.Add(new ConfigurationModel
         {
             Id = Guid.NewGuid(),
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://example.com"
         });
         await context.SaveChangesAsync();
 
         // Act
-        var result = await service.GetConfigurationAsync(ConfigurationKeys.HAUrl);
+        var result = await service.GetConfigurationAsync(ConfigurationKeys.HomeAssistantUrl);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(ConfigurationKeys.HAUrl, result.Name);
+        Assert.Equal(ConfigurationKeys.HomeAssistantUrl, result.Name);
         Assert.Equal("https://example.com", result.Value);
     }
 
@@ -192,7 +192,7 @@ public class ConfigurationServiceTests
         var service = CreateService(context);
 
         // Act
-        var result = await service.GetConfigurationAsync(ConfigurationKeys.HAUrl);
+        var result = await service.GetConfigurationAsync(ConfigurationKeys.HomeAssistantUrl);
 
         // Assert
         Assert.Null(result);
@@ -220,14 +220,14 @@ public class ConfigurationServiceTests
         context.Configurations.Add(new ConfigurationModel
         {
             Id = Guid.NewGuid(),
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://old.example.com"
         });
         await context.SaveChangesAsync();
 
         var updateModel = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "  https://new.example.com  "
         };
 
@@ -235,7 +235,7 @@ public class ConfigurationServiceTests
         await service.UpdateConfigurationAsync(updateModel);
 
         // Assert
-        var result = await context.Configurations.SingleAsync(x => x.Name == ConfigurationKeys.HAUrl);
+        var result = await context.Configurations.SingleAsync(x => x.Name == ConfigurationKeys.HomeAssistantUrl);
         Assert.Equal("https://new.example.com", result.Value);
     }
 
@@ -264,7 +264,7 @@ public class ConfigurationServiceTests
         var service = CreateService(context);
         var updateModel = new ConfigurationCreateModel
         {
-            Name = ConfigurationKeys.HAToken,
+            Name = ConfigurationKeys.HomeAssistantToken,
             Value = "token-value"
         };
 
@@ -295,8 +295,8 @@ public class ConfigurationServiceTests
         var service = CreateService(context);
 
         context.Configurations.AddRange(
-            new BatteryAdvisor.Core.Models.Database.ConfigurationModel { Id = Guid.NewGuid(), Name = ConfigurationKeys.HAUrl, Value = "https://example.com" },
-            new BatteryAdvisor.Core.Models.Database.ConfigurationModel { Id = Guid.NewGuid(), Name = ConfigurationKeys.HAToken, Value = "token123" }
+            new BatteryAdvisor.Core.Models.Database.ConfigurationModel { Id = Guid.NewGuid(), Name = ConfigurationKeys.HomeAssistantUrl, Value = "https://example.com" },
+            new BatteryAdvisor.Core.Models.Database.ConfigurationModel { Id = Guid.NewGuid(), Name = ConfigurationKeys.HomeAssistantToken, Value = "token123" }
         );
         await context.SaveChangesAsync();
 
@@ -305,8 +305,8 @@ public class ConfigurationServiceTests
 
         // Assert
         Assert.Equal(2, result.Count);
-        Assert.Contains(result, r => r.Name == ConfigurationKeys.HAUrl && r.Value == "https://example.com");
-        Assert.Contains(result, r => r.Name == ConfigurationKeys.HAToken && r.Value == "token123");
+        Assert.Contains(result, r => r.Name == ConfigurationKeys.HomeAssistantUrl && r.Value == "https://example.com");
+        Assert.Contains(result, r => r.Name == ConfigurationKeys.HomeAssistantToken && r.Value == "token123");
     }
 
     [Fact]
@@ -319,16 +319,16 @@ public class ConfigurationServiceTests
         context.Configurations.Add(new BatteryAdvisor.Core.Models.Database.ConfigurationModel
         {
             Id = Guid.NewGuid(),
-            Name = ConfigurationKeys.HAUrl,
+            Name = ConfigurationKeys.HomeAssistantUrl,
             Value = "https://example.com"
         });
         await context.SaveChangesAsync();
 
         // Act
-        await service.DeleteConfigurationAsync(ConfigurationKeys.HAUrl);
+        await service.DeleteConfigurationAsync(ConfigurationKeys.HomeAssistantUrl);
 
         // Assert
-        var result = await context.Configurations.SingleOrDefaultAsync(x => x.Name == ConfigurationKeys.HAUrl);
+        var result = await context.Configurations.SingleOrDefaultAsync(x => x.Name == ConfigurationKeys.HomeAssistantUrl);
         Assert.Null(result);
     }
 
@@ -340,7 +340,7 @@ public class ConfigurationServiceTests
         var service = CreateService(context);
 
         // Act & Assert
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.DeleteConfigurationAsync(ConfigurationKeys.HAUrl));
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.DeleteConfigurationAsync(ConfigurationKeys.HomeAssistantUrl));
         Assert.Contains("does not exist", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 

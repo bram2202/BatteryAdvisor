@@ -1,3 +1,5 @@
+using BatteryAdvisor.Core.Contracts.Enums;
+using BatteryAdvisor.Core.Contracts.Models;
 using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.HA.Contracts.Services;
 using Microsoft.Extensions.Logging;
@@ -8,15 +10,17 @@ namespace BatteryAdvisor.HA.Services;
 public class HomeAssistantRestService : IHomeAssistantRestService
 {
     private readonly IHttpClientService _httpClientService;
+    private readonly IConfigurationService _configurationService;
     private readonly ILogger<HomeAssistantRestService> _logger;
 
-    public HomeAssistantRestService(IHttpClientService httpClientService, ILogger<HomeAssistantRestService> logger)
+    public HomeAssistantRestService(IHttpClientService httpClientService, IConfigurationService configurationService, ILogger<HomeAssistantRestService> logger)
     {
         _httpClientService = httpClientService;
+        _configurationService = configurationService;
         _logger = logger;
     }
 
-    public Task<bool> TestConnectionAsync(string url, string token)
+    public async Task<bool> TestConnectionAsync(string url, string token)
     {
 
         var path = $"{url}/api/";
@@ -30,7 +34,11 @@ public class HomeAssistantRestService : IHomeAssistantRestService
         try
         {
             _ = _httpClientService.GetAsync<object>(path, headers).GetAwaiter().GetResult();
-            return Task.FromResult(true);
+
+            // If the request is successful, we can assume the connection details are valid. We return true to indicate a successful connection.
+            await StoreConnectionDetailsAsync(url, token);
+
+            return true;
         }
         catch (HttpRequestException ex)
         {
@@ -41,6 +49,33 @@ public class HomeAssistantRestService : IHomeAssistantRestService
 
             throw;
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while testing connection to Home Assistant API. Message: {Message}", ex.Message);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Stores the connection details in the database for future use. 
+    /// </summary>
+    /// <param name="url">The URL of the Home Assistant instance.</param>
+    /// <param name="token">The access token for the Home Assistant instance.</param>
+    /// <returns></returns>
+    private async Task StoreConnectionDetailsAsync(string url, string token)
+    {
+        // Store the connection details in the database for future use
+        await _configurationService.AddOrUpdateAsync(new ConfigurationCreateModel
+        {
+            Name = ConfigurationKeys.HomeAssistantUrl,
+            Value = url
+        });
+
+        await _configurationService.AddOrUpdateAsync(new ConfigurationCreateModel
+        {
+            Name = ConfigurationKeys.HomeAssistantToken,
+            Value = token
+        });
     }
 
 

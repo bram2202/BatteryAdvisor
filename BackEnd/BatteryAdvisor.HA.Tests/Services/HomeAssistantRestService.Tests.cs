@@ -1,3 +1,5 @@
+using BatteryAdvisor.Core.Contracts.Enums;
+using BatteryAdvisor.Core.Contracts.Models;
 using BatteryAdvisor.Core.Contracts.Services;
 using BatteryAdvisor.HA.Services;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -12,7 +14,7 @@ public class HomeAssistantRestServiceTests
     {
         // Arrange
         var httpClientService = new FakeHttpClientService();
-        var service = new HomeAssistantRestService(httpClientService, NullLogger<HomeAssistantRestService>.Instance);
+        var service = new HomeAssistantRestService(httpClientService, new FakeConfigurationService(), NullLogger<HomeAssistantRestService>.Instance);
 
         // Act
         var result = await service.TestConnectionAsync("https://ha.local", "abc123");
@@ -35,7 +37,7 @@ public class HomeAssistantRestServiceTests
         {
             ExceptionToThrow = exception
         };
-        var service = new HomeAssistantRestService(httpClientService, NullLogger<HomeAssistantRestService>.Instance);
+        var service = new HomeAssistantRestService(httpClientService, new FakeConfigurationService(), NullLogger<HomeAssistantRestService>.Instance);
 
         // Act
         var action = () => service.TestConnectionAsync("https://ha.local", "abc123");
@@ -54,7 +56,7 @@ public class HomeAssistantRestServiceTests
         {
             ExceptionToThrow = exception
         };
-        var service = new HomeAssistantRestService(httpClientService, NullLogger<HomeAssistantRestService>.Instance);
+        var service = new HomeAssistantRestService(httpClientService, new FakeConfigurationService(), NullLogger<HomeAssistantRestService>.Instance);
 
         // Act
         var action = () => service.TestConnectionAsync("https://ha.local", "abc123");
@@ -62,6 +64,16 @@ public class HomeAssistantRestServiceTests
         // Assert
         var thrown = await Assert.ThrowsAsync<HttpRequestException>(action);
         Assert.Equal(HttpStatusCode.InternalServerError, thrown.StatusCode);
+    }
+
+    private sealed class FakeConfigurationService : IConfigurationService
+    {
+        public Task AddAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
+        public Task AddOrUpdateAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
+        public Task<ConfigurationReadModel?> GetConfigurationAsync(ConfigurationKeys key) => Task.FromResult<ConfigurationReadModel?>(null);
+        public Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync() => Task.FromResult(Enumerable.Empty<ConfigurationReadModel>());
+        public Task UpdateConfigurationAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
+        public Task DeleteConfigurationAsync(ConfigurationKeys key) => Task.CompletedTask;
     }
 
     private sealed class FakeHttpClientService : IHttpClientService

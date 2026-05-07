@@ -1,0 +1,56 @@
+<div #visibilityTarget class="card flex justify-center w-full">
+  <div class="flex flex-col gap-2 w-1/2">
+
+    <div class="flex items-center gap-2">
+      <label for="powerConsumptionEntities">Power Consumption Entities</label>
+      <span class="text-red-500 font-bold" title="Required field">*</span>
+    </div>
+    <p-multiselect
+      id="powerConsumptionEntities"
+      [options]="entities()"
+      [ngModel]="selectedPowerConsumptionEntitiesSignal()"
+      (ngModelChange)="onSelectionChange('consumption', $event)"
+      optionLabel="friendlyName"
+      placeholder="Select Entities (minimum 1)"
+      [maxSelectedLabels]="3"
+      class="w-full"
+      display="chip"
+    />
+    @if (selectedPowerConsumptionEntitiesSignal().length === 0) {
+      <span class="text-sm text-red-500">At least 1 entity is required</span>
+    }
+
+    <div class="flex items-center gap-2">
+      <label for="powerProductionEntities">Power Production Entities</label>
+      <span class="text-red-500 font-bold" title="Required field">*</span>
+    </div>
+    <p-multiselect
+      id="powerProductionEntities"
+      [options]="entities()"
+      [ngModel]="selectedPowerProductionEntitiesSignal()"
+      (ngModelChange)="onSelectionChange('production', $event)"
+      optionLabel="friendlyName"
+      placeholder="Select Entities (minimum 1)"
+      [maxSelectedLabels]="3"
+      class="w-full"
+      display="chip"
+    />  
+    @if (selectedPowerProductionEntitiesSignal().length === 0) {
+      <span class="text-sm text-red-500">At least 1 entity is required</span>
+    }
+
+    <label for="pvEntities">PV Entities</label>
+    <p-multiselect
+      id="pvEntities"
+      [options]="entities()"
+      [ngModel]="selectedPvEntitiesSignal()"
+      (ngModelChange)="onSelectionChange('pv', $event)"
+      optionLabel="friendlyName"
+      placeholder="Select Entities (optional)"
+      [maxSelectedLabels]="3"
+      class="w-full"
+      display="chip"
+    />
+
+  </div>
+</div>
