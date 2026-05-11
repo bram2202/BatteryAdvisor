@@ -5,6 +5,7 @@ import { PopupTypeEnum } from '../../../enums/popup-type-enum';
 import { ApiTestService } from '../../../services/api-services/api-test-service/api-test-service';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { ConfigurationStatusService } from '../../../services/configuration-status/configuration-status.service';
 
 @Component({
   selector: 'app-home-assistant-connection',
@@ -16,6 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 export class HomeAssistantConnection {
   private readonly apiTestService = inject(ApiTestService);
   private readonly popupService = inject(PopupService);
+  private readonly configStatus = inject(ConfigurationStatusService);
 
   readonly homeAssistantUrl = signal('http://homeassistant.local:8123');
   readonly homeAssistantToken = signal<string | undefined>(undefined);
@@ -28,6 +30,7 @@ export class HomeAssistantConnection {
     this.apiTestService
       .testApiConnection(this.homeAssistantUrl(), this.homeAssistantToken() ?? '')
       .then(() => {
+        this.configStatus.haConnectionConfigured.set(true);
         this.popupService.showToast(
           PopupTypeEnum.Success,
           'Connection Successful',

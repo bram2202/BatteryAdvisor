@@ -7,6 +7,7 @@ import { ApiEntityService } from '../../../services/api-services/api-entity-serv
 import { ApiConfigurationService } from '../../../services/api-services/api-configuration-service/api-configuration-service';
 import { PopupService } from '../../../services/popup-service/popup-service';
 import { PopupTypeEnum } from '../../../enums/popup-type-enum';
+import { ConfigurationStatusService } from '../../../services/configuration-status/configuration-status.service';
 
 @Component({
   selector: 'app-power-entity-setup',
@@ -19,6 +20,7 @@ export class PowerEntitySetup implements OnInit {
   private readonly apiEntityService = inject(ApiEntityService);
   private readonly apiConfigurationService = inject(ApiConfigurationService);
   private readonly popupService = inject(PopupService);
+  private readonly configStatus = inject(ConfigurationStatusService);
 
   readonly entities = signal<EntityDto[]>([]);
   readonly selectedPowerConsumptionEntities = signal<EntityDto[]>([]);
@@ -79,6 +81,7 @@ export class PowerEntitySetup implements OnInit {
         powerConsumptionEntities: consumption.map((entity) => entity.entityId),
       })
       .then(() => {
+        this.configStatus.powerEntitiesConfigured.set(true);
         this.popupService.showToast(
           PopupTypeEnum.Success,
           'Configuration Saved',
