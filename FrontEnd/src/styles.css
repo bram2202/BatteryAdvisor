@@ -2,3 +2,9 @@
 
 @import '@fortawesome/fontawesome-free/css/all.min.css';
 @import 'tailwindcss';
+
+/* Green badge for configured menu items */
+.config-badge-success.p-badge {
+  background-color: #16a34a;
+  color: white;
+}

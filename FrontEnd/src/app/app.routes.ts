@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
-import { SetupWizard } from './pages/setup-wizard/setup-wizard';
+import { HomeAssistantConnection } from './pages/home-assistant-connection/home-assistant-connection';
+import { PowerEntitySetup } from './pages/power-entity-setup/power-entity-setup';
 
 export const routes: Routes = [
 	{
@@ -8,7 +9,11 @@ export const routes: Routes = [
 		component: Home,
 	},
 	{
-		path: 'setup-wizard',
-		component: SetupWizard,
+		path: 'home-assistant-connection',
+		component: HomeAssistantConnection,
+	},
+	{
+		path: 'power-entity-setup',
+		component: PowerEntitySetup,
 	},
 ];
