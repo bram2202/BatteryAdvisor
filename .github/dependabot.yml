@@ -6,8 +6,9 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/BackEnd"
     schedule:
-      interval: "daily"
-      time: "06:00"
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
       timezone: "Europe/Amsterdam"
     open-pull-requests-limit: 5
     commit-message:
@@ -21,8 +22,9 @@ updates:
   - package-ecosystem: "npm"
     directory: "/FrontEnd"
     schedule:
-      interval: "daily"
-      time: "06:30"
+      interval: "weekly"
+      day: "monday"
+      time: "04:30"
       timezone: "Europe/Amsterdam"
     open-pull-requests-limit: 5
     commit-message:
@@ -37,6 +39,8 @@ updates:
     directory: "/.github/workflows"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "05:00"
       timezone: "Europe/Amsterdam"
     open-pull-requests-limit: 5
     commit-message:
