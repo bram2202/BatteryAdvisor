@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { ConfigurationStatusService } from '../services/configuration-status/configuration-status.service';
 
 @Component({
   selector: 'app-root',
@@ -11,30 +12,35 @@ import { ToastModule } from 'primeng/toast';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class App implements OnInit {
   protected readonly appName = 'Battery Advisor';
 
-  protected readonly topMenuItems: MenuItem[] = [
-    {
-      label: 'Home',
-      routerLink: '/',
-    },
-    {
-      label: 'Setup Wizard',
-      routerLink: '/setup-wizard',
-    },
-  ];
+  protected readonly configStatus = inject(ConfigurationStatusService);
 
-  protected readonly sideMenuItems: MenuItem[] = [
+  protected readonly sideMenuItems = computed<MenuItem[]>(() => [
     {
       label: 'Home',
       icon: 'fa-solid fa-house',
       routerLink: '/',
     },
     {
-      label: 'Setup Wizard',
-      icon: 'fa-solid fa-gears',
-      routerLink: '/setup-wizard',
+      label: 'HA Connection',
+      icon: 'fa-solid fa-plug',
+      routerLink: '/home-assistant-connection',
+      badge: this.configStatus.haConnectionConfigured() ? '✓' : undefined,
+      badgeStyleClass: 'config-badge-success',
     },
-  ];
+    {
+      label: 'Power Entity Setup',
+      icon: 'fa-solid fa-bolt',
+      routerLink: '/power-entity-setup',
+      badge: this.configStatus.powerEntitiesConfigured() ? '✓' : undefined,
+      badgeStyleClass: 'config-badge-success',
+      disabled: !this.configStatus.haConnectionConfigured(),
+    },
+  ]);
+
+  ngOnInit(): void {
+    this.configStatus.refresh();
+  }
 }

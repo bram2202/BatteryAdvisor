@@ -1,0 +1,38 @@
+<section
+  class="min-h-full p-5 rounded-xl bg-[#f6fffd] border border-[#aee8de] text-[#0a3d4d] shadow-[0_10px_30px_rgba(10,61,77,0.08)]"
+>
+  <h1 class="mt-0 mb-3 text-2xl font-bold text-[#0f6f7a]">Home Assistant Connection</h1>
+  <p class="mb-4 text-sm text-[#0a3d4d]">
+    Enter your Home Assistant URL and long-lived access token, then test and save the connection.
+  </p>
+
+<div class="flex flex-col gap-2 w-1/2">
+  <label for="username">Home Assistant URL</label>
+  <input
+    placeholder="http://homeassistant.local:8123"
+    pInputText
+    id="username"
+    class="w-full"
+    [ngModel]="homeAssistantUrl()"
+    (ngModelChange)="homeAssistantUrl.set($event)"
+  />
+
+  <label for="password">Home Assistant Long-Lived Access Token</label>
+  <input  
+    pInputText
+    id="password"
+    type="password"
+    autocomplete="off"
+    class="w-full"
+    [ngModel]="homeAssistantToken()"
+    (ngModelChange)="homeAssistantToken.set($event)"
+  />
+
+  <div class="flex justify-end mt-2">
+    <p-button label="Test & Save Connection" [disabled]="!canSave" (onClick)="testAndSaveConnection()" />
+  </div>
+</div>
+
+
+
+</section>

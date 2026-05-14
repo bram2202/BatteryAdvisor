@@ -1,4 +1,11 @@
-<div #visibilityTarget class="card flex justify-center w-full">
+<section
+  class="min-h-full p-5 rounded-xl bg-[#f6fffd] border border-[#aee8de] text-[#0a3d4d] shadow-[0_10px_30px_rgba(10,61,77,0.08)]"
+>
+  <h1 class="mt-0 mb-3 text-2xl font-bold text-[#0f6f7a]">Power Entity Setup</h1>
+  <p class="mb-4 text-sm text-[#0a3d4d]">
+    Select the Home Assistant entities that measure power consumption, production, and solar (PV) output.
+  </p>
+
   <div class="flex flex-col gap-2 w-1/2">
 
     <div class="flex items-center gap-2">
@@ -8,7 +15,7 @@
     <p-multiselect
       id="powerConsumptionEntities"
       [options]="entities()"
-      [ngModel]="selectedPowerConsumptionEntitiesSignal()"
+      [ngModel]="selectedPowerConsumptionEntities()"
       (ngModelChange)="onSelectionChange('consumption', $event)"
       optionLabel="friendlyName"
       placeholder="Select Entities (minimum 1)"
@@ -16,7 +23,7 @@
       class="w-full"
       display="chip"
     />
-    @if (selectedPowerConsumptionEntitiesSignal().length === 0) {
+    @if (selectedPowerConsumptionEntities().length === 0) {
       <span class="text-sm text-red-500">At least 1 entity is required</span>
     }
 
@@ -27,15 +34,15 @@
     <p-multiselect
       id="powerProductionEntities"
       [options]="entities()"
-      [ngModel]="selectedPowerProductionEntitiesSignal()"
+      [ngModel]="selectedPowerProductionEntities()"
       (ngModelChange)="onSelectionChange('production', $event)"
       optionLabel="friendlyName"
       placeholder="Select Entities (minimum 1)"
       [maxSelectedLabels]="3"
       class="w-full"
       display="chip"
-    />  
-    @if (selectedPowerProductionEntitiesSignal().length === 0) {
+    />
+    @if (selectedPowerProductionEntities().length === 0) {
       <span class="text-sm text-red-500">At least 1 entity is required</span>
     }
 
@@ -43,7 +50,7 @@
     <p-multiselect
       id="pvEntities"
       [options]="entities()"
-      [ngModel]="selectedPvEntitiesSignal()"
+      [ngModel]="selectedPvEntities()"
       (ngModelChange)="onSelectionChange('pv', $event)"
       optionLabel="friendlyName"
       placeholder="Select Entities (optional)"
@@ -53,4 +60,13 @@
     />
 
   </div>
-</div>
+
+  <div class="flex justify-end mt-4">
+    <p-button
+      label="Save"
+      icon="pi pi-save"
+      [disabled]="!canProceed"
+      (onClick)="save()"
+    />
+  </div>
+</section>
