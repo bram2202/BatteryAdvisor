@@ -8,6 +8,7 @@ import { ApiConfigurationService } from '../../../services/api-services/api-conf
 import { PopupService } from '../../../services/popup-service/popup-service';
 import { PopupTypeEnum } from '../../../enums/popup-type-enum';
 import { ConfigurationStatusService } from '../../../services/configuration-status/configuration-status.service';
+import { ConfigurationKeyEnum } from '../../../enums/configuration-key-enum';
 
 @Component({
   selector: 'app-power-entity-setup',
@@ -41,9 +42,9 @@ export class PowerEntitySetup implements OnInit {
   private async loadSavedSelections(): Promise<void> {
     const [allEntities, consumptionConfig, productionConfig, pvConfig] = await Promise.all([
       this.apiEntityService.getEntities(),
-      this.apiConfigurationService.getConfigurationByKey('HomeAssistantPowerConsumptionEntities'),
-      this.apiConfigurationService.getConfigurationByKey('HomeAssistantPowerProductionEntities'),
-      this.apiConfigurationService.getConfigurationByKey('HomeAssistantPvEntities'),
+      this.apiConfigurationService.getConfigurationByKey(ConfigurationKeyEnum.HomeAssistantPowerConsumptionEntities),
+      this.apiConfigurationService.getConfigurationByKey(ConfigurationKeyEnum.HomeAssistantPowerProductionEntities),
+      this.apiConfigurationService.getConfigurationByKey(ConfigurationKeyEnum.HomeAssistantPvEntities),
     ]);
 
     this.entities.set(allEntities);

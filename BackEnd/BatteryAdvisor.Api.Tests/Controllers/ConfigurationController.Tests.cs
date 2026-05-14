@@ -29,7 +29,7 @@ public class ConfigurationControllerTests
 
         var configurationServiceMock = new Mock<IConfigurationService>();
         configurationServiceMock
-            .Setup(s => s.GetAllConfigurationsAsync())
+            .Setup(s => s.GetAllConfigurationsAsync(true))
             .ReturnsAsync(configurations);
 
         var controller = new ConfigurationController(configurationServiceMock.Object);

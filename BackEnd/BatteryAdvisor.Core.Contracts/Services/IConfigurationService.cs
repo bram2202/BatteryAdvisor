@@ -29,8 +29,9 @@ public interface IConfigurationService
     /// <summary>
     /// Retrieves all configurations.
     /// </summary>
+    /// <param name="maskSensitiveValues">When true, sensitive values such as tokens are replaced with a placeholder.</param>
     /// <returns>A list of all configuration models.</returns>
-    Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync();
+    Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync(bool maskSensitiveValues = false);
 
     /// <summary>
     /// Updates an existing configuration after applying configuration-specific business rules.

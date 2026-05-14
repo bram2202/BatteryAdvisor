@@ -107,7 +107,7 @@ public class ConfigurationService : IConfigurationService
         };
     }
 
-    public async Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync()
+    public async Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync(bool maskSensitiveValues = false)
     {
         var configurations = await _context.Configurations
             .AsNoTracking() // Don't track entities for read-only operations
@@ -116,7 +116,9 @@ public class ConfigurationService : IConfigurationService
         return configurations.Select(c => new ConfigurationReadModel
         {
             Name = c.Name,
-            Value = c.Value
+            Value = maskSensitiveValues && c.Name == ConfigurationKeys.HomeAssistantToken
+                ? "****"
+                : c.Value
         }).ToList();
     }
 

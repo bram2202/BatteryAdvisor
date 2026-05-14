@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
 import { HomeAssistantConnection } from './pages/home-assistant-connection/home-assistant-connection';
 import { PowerEntitySetup } from './pages/power-entity-setup/power-entity-setup';
+import { PowerCostSetup } from './pages/power-cost-setup/power-cost-setup';
 
 export const routes: Routes = [
 	{
@@ -16,4 +17,8 @@ export const routes: Routes = [
 		path: 'power-entity-setup',
 		component: PowerEntitySetup,
 	},
+	{
+		path: 'power-cost-setup',
+		component: PowerCostSetup,
+	}
 ];

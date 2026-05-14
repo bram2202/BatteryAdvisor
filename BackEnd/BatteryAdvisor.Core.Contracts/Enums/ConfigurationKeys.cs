@@ -7,4 +7,6 @@ public enum ConfigurationKeys
     HomeAssistantPowerConsumptionEntities,
     HomeAssistantPowerProductionEntities,
     HomeAssistantPvEntities,
+    PowerCostImport,
+    PowerCostExport
 }

@@ -310,6 +310,28 @@ public class ConfigurationServiceTests
     }
 
     [Fact]
+    public async Task GetAllConfigurationsAsync_WhenMaskSensitiveValuesIsTrue_MasksToken()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+
+        context.Configurations.AddRange(
+            new BatteryAdvisor.Core.Models.Database.ConfigurationModel { Id = Guid.NewGuid(), Name = ConfigurationKeys.HomeAssistantUrl, Value = "https://example.com" },
+            new BatteryAdvisor.Core.Models.Database.ConfigurationModel { Id = Guid.NewGuid(), Name = ConfigurationKeys.HomeAssistantToken, Value = "token123" }
+        );
+        await context.SaveChangesAsync();
+
+        // Act
+        var result = (await service.GetAllConfigurationsAsync(maskSensitiveValues: true)).ToList();
+
+        // Assert
+        Assert.Equal(2, result.Count);
+        Assert.Contains(result, r => r.Name == ConfigurationKeys.HomeAssistantUrl && r.Value == "https://example.com");
+        Assert.Contains(result, r => r.Name == ConfigurationKeys.HomeAssistantToken && r.Value == "****");
+    }
+
+    [Fact]
     public async Task DeleteConfigurationAsync_WhenConfigurationExists_DeletesIt()
     {
         // Arrange

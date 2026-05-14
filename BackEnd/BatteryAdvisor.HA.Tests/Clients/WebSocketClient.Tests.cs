@@ -175,7 +175,7 @@ public class WebSocketClientTests
 
         public Task AddAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
         public Task AddOrUpdateAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
-        public Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync() => Task.FromResult(Enumerable.Empty<ConfigurationReadModel>());
+        public Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync(bool maskSensitiveValues = false) => Task.FromResult(Enumerable.Empty<ConfigurationReadModel>());
         public Task UpdateConfigurationAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
         public Task DeleteConfigurationAsync(ConfigurationKeys key) => Task.CompletedTask;
     }
