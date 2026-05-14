@@ -6,13 +6,6 @@ namespace BatteryAdvisor.Core.Contracts.Services;
 public interface IConfigurationService
 {
     /// <summary>
-    /// Adds a new configuration after applying configuration-specific business rules.
-    /// </summary>
-    /// <param name="configuration">Configuration payload to add.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddAsync(ConfigurationCreateModel configuration);
-
-    /// <summary>
     /// Adds a new configuration or updates an existing one based on the provided key.
     /// </summary>
     /// <param name="configuration">Configuration payload to add or update.</param>

@@ -68,7 +68,6 @@ public class HomeAssistantRestServiceTests
 
     private sealed class FakeConfigurationService : IConfigurationService
     {
-        public Task AddAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
         public Task AddOrUpdateAsync(ConfigurationCreateModel configuration) => Task.CompletedTask;
         public Task<ConfigurationReadModel?> GetConfigurationAsync(ConfigurationKeys key) => Task.FromResult<ConfigurationReadModel?>(null);
         public Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync(bool maskSensitiveValues = false) => Task.FromResult(Enumerable.Empty<ConfigurationReadModel>());

@@ -150,7 +150,7 @@ public class ConfigurationControllerTests
         // Assert
         Assert.IsType<OkResult>(actionResult);
         configurationServiceMock.Verify(
-            s => s.AddAsync(createModel),
+            s => s.AddOrUpdateAsync(createModel),
             Times.Once);
     }
 
@@ -166,7 +166,7 @@ public class ConfigurationControllerTests
 
         var configurationServiceMock = new Mock<IConfigurationService>();
         configurationServiceMock
-            .Setup(s => s.AddAsync(createModel))
+            .Setup(s => s.AddOrUpdateAsync(createModel))
             .ThrowsAsync(new ArgumentException("Configuration value cannot be empty."));
 
         var controller = new ConfigurationController(configurationServiceMock.Object);
@@ -191,7 +191,7 @@ public class ConfigurationControllerTests
 
         var configurationServiceMock = new Mock<IConfigurationService>();
         configurationServiceMock
-            .Setup(s => s.AddAsync(createModel))
+            .Setup(s => s.AddOrUpdateAsync(createModel))
             .ThrowsAsync(new InvalidOperationException("Configuration already exists."));
 
         var controller = new ConfigurationController(configurationServiceMock.Object);
