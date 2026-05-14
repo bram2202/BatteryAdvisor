@@ -19,7 +19,7 @@ public class ConfigurationController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetConfiguration()
     {
-        var result = await _configurationService.GetAllConfigurationsAsync();
+        var result = await _configurationService.GetAllConfigurationsAsync(maskSensitiveValues: true);
         return Ok(result);
     }
 
@@ -46,7 +46,7 @@ public class ConfigurationController : ControllerBase
     {
         try
         {
-            await _configurationService.AddAsync(configuration);
+            await _configurationService.AddOrUpdateAsync(configuration);
             return Ok();
         }
         catch (ArgumentException ex)

@@ -1,0 +1,40 @@
+<section
+  class="min-h-full p-5 rounded-xl bg-[#f6fffd] border border-[#aee8de] text-[#0a3d4d] shadow-[0_10px_30px_rgba(10,61,77,0.08)]"
+>
+  <h1 class="mt-0 mb-3 text-2xl font-bold text-[#0f6f7a]">Power Entity Setup</h1>
+  <p class="mb-4 text-sm text-[#0a3d4d]">
+    Enter the cost per kWh for power consumption and the revenue per kWh for power production.
+    <br />
+    These values are used to calculate the cost of consumed power and the revenue from produced
+    power, which in turn are used to determine the optimal battery usage strategy.
+  </p>
+
+  <div class="flex flex-col gap-2 w-1/2">
+    <label for="costImport">Cost Import</label>
+    <p-inputNumber
+      id="costImport"
+      [(ngModel)]="costImport"
+      mode="currency"
+      currency="EUR"
+      locale="nl-NL"
+      class="w-full"
+    />
+
+    <label for="costExport">Cost Export</label>
+    <p-inputNumber
+      id="costExport"
+      [(ngModel)]="costExport"
+      mode="currency"
+      currency="EUR"
+      locale="nl-NL"
+      class="w-full"
+    />  
+  </div>
+    <div class="flex justify-end mt-4">
+    <p-button
+      label="Save"
+      icon="pi pi-save"
+      (onClick)="save()"
+    />
+  </div>
+</section>

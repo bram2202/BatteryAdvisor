@@ -6,13 +6,6 @@ namespace BatteryAdvisor.Core.Contracts.Services;
 public interface IConfigurationService
 {
     /// <summary>
-    /// Adds a new configuration after applying configuration-specific business rules.
-    /// </summary>
-    /// <param name="configuration">Configuration payload to add.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddAsync(ConfigurationCreateModel configuration);
-
-    /// <summary>
     /// Adds a new configuration or updates an existing one based on the provided key.
     /// </summary>
     /// <param name="configuration">Configuration payload to add or update.</param>
@@ -29,8 +22,9 @@ public interface IConfigurationService
     /// <summary>
     /// Retrieves all configurations.
     /// </summary>
+    /// <param name="maskSensitiveValues">When true, sensitive values such as tokens are replaced with a placeholder.</param>
     /// <returns>A list of all configuration models.</returns>
-    Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync();
+    Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync(bool maskSensitiveValues = false);
 
     /// <summary>
     /// Updates an existing configuration after applying configuration-specific business rules.

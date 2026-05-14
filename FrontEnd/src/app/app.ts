@@ -38,6 +38,14 @@ export class App implements OnInit {
       badgeStyleClass: 'config-badge-success',
       disabled: !this.configStatus.haConnectionConfigured(),
     },
+    {
+      label: 'Power Cost Setup',
+      icon: 'fa-solid fa-dollar-sign',
+      routerLink: '/power-cost-setup',
+      badge: this.configStatus.powerImportCostsConfigured() && this.configStatus.powerExportCostsConfigured() ? '✓' : undefined,
+      badgeStyleClass: 'config-badge-success',
+      disabled: !this.configStatus.powerEntitiesConfigured(),
+    },
   ]);
 
   ngOnInit(): void {

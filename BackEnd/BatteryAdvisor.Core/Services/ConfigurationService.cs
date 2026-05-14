@@ -18,37 +18,6 @@ public class ConfigurationService : IConfigurationService
         _context = context;
     }
 
-    public async Task AddAsync(ConfigurationCreateModel configuration)
-    {
-        if (!Enum.IsDefined(configuration.Name))
-        {
-            throw new ArgumentException($"Invalid configuration name '{configuration.Name}'.", nameof(configuration));
-        }
-
-        if (string.IsNullOrWhiteSpace(configuration.Value))
-        {
-            throw new ArgumentException("Configuration value cannot be empty.", nameof(configuration));
-        }
-
-
-        var alreadyExists = await _context.Configurations
-            .AnyAsync(x => x.Name == configuration.Name);
-
-        if (alreadyExists)
-        {
-            throw new InvalidOperationException($"Configuration with name '{configuration.Name}' already exists.");
-        }
-
-        var entity = new ConfigurationModel
-        {
-            Id = Guid.NewGuid(),
-            Name = configuration.Name,
-            Value = configuration.Value.Trim()
-        };
-
-        await _databaseService.AddAsync(entity);
-    }
-
     public Task AddOrUpdateAsync(ConfigurationCreateModel configuration)
     {
         if (!Enum.IsDefined(configuration.Name))
@@ -107,7 +76,7 @@ public class ConfigurationService : IConfigurationService
         };
     }
 
-    public async Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync()
+    public async Task<IEnumerable<ConfigurationReadModel>> GetAllConfigurationsAsync(bool maskSensitiveValues = false)
     {
         var configurations = await _context.Configurations
             .AsNoTracking() // Don't track entities for read-only operations
@@ -116,7 +85,9 @@ public class ConfigurationService : IConfigurationService
         return configurations.Select(c => new ConfigurationReadModel
         {
             Name = c.Name,
-            Value = c.Value
+            Value = maskSensitiveValues && c.Name == ConfigurationKeys.HomeAssistantToken
+                ? "****"
+                : c.Value
         }).ToList();
     }
 

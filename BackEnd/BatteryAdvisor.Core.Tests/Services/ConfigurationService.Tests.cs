@@ -24,143 +24,6 @@ public class ConfigurationServiceTests
     }
 
     [Fact]
-    public async Task AddAsync_WithValidConfiguration_AddsSuccessfully()
-    {
-        // Arrange
-        await using var context = CreateDbContext();
-        var service = CreateService(context);
-        var config = new ConfigurationCreateModel
-        {
-            Name = ConfigurationKeys.HomeAssistantUrl,
-            Value = "https://example.com"
-        };
-
-        // Act
-        await service.AddAsync(config);
-
-        // Assert
-        var result = await context.Configurations.SingleOrDefaultAsync(x => x.Name == ConfigurationKeys.HomeAssistantUrl);
-        Assert.NotNull(result);
-        Assert.Equal("https://example.com", result.Value);
-    }
-
-    [Fact]
-    public async Task AddAsync_WithEmptyValue_ThrowsArgumentException()
-    {
-        // Arrange
-        await using var context = CreateDbContext();
-        var service = CreateService(context);
-        var config = new ConfigurationCreateModel
-        {
-            Name = ConfigurationKeys.HomeAssistantUrl,
-            Value = ""
-        };
-
-        // Act & Assert
-        var ex = await Assert.ThrowsAsync<ArgumentException>(() => service.AddAsync(config));
-        Assert.Contains("value cannot be empty", ex.Message, StringComparison.OrdinalIgnoreCase);
-    }
-
-    [Fact]
-    public async Task AddAsync_WithWhitespaceValue_ThrowsArgumentException()
-    {
-        // Arrange
-        await using var context = CreateDbContext();
-        var service = CreateService(context);
-        var config = new ConfigurationCreateModel
-        {
-            Name = ConfigurationKeys.HomeAssistantUrl,
-            Value = "   "
-        };
-
-        // Act & Assert
-        var ex = await Assert.ThrowsAsync<ArgumentException>(() => service.AddAsync(config));
-        Assert.Contains("value cannot be empty", ex.Message, StringComparison.OrdinalIgnoreCase);
-    }
-
-    [Fact]
-    public async Task AddAsync_WithDuplicateName_ThrowsInvalidOperationException()
-    {
-        // Arrange
-        await using var context = CreateDbContext();
-        var service = CreateService(context);
-
-        var config1 = new ConfigurationCreateModel 
-        {
-            Name = ConfigurationKeys.HomeAssistantUrl,
-            Value = "https://example.com"
-        };
-
-        var config2 = new ConfigurationCreateModel
-        {
-            Name = ConfigurationKeys.HomeAssistantUrl,
-            Value = "https://other.com"
-        };
-
-        // Act & Assert
-        await service.AddAsync(config1);
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.AddAsync(config2));
-        Assert.Contains("already exists", ex.Message, StringComparison.OrdinalIgnoreCase);
-    }
-
-    [Fact]
-    public async Task AddAsync_WithInvalidName_ThrowsArgumentException()
-    {
-        // Arrange
-        await using var context = CreateDbContext();
-        var service = CreateService(context);
-        var config = new ConfigurationCreateModel
-        {
-            Name = (ConfigurationKeys)999,
-            Value = "https://example.com"
-        };
-
-        // Act & Assert
-        var ex = await Assert.ThrowsAsync<ArgumentException>(() => service.AddAsync(config));
-        Assert.Contains("invalid configuration name", ex.Message, StringComparison.OrdinalIgnoreCase);
-    }
-
-    [Fact]
-    public async Task AddAsync_TrimsWhitespaceFromValue()
-    {
-        // Arrange
-        await using var context = CreateDbContext();
-        var service = CreateService(context);
-        var config = new ConfigurationCreateModel
-        {
-            Name = ConfigurationKeys.HomeAssistantToken,
-            Value = "  token123  "
-        };
-
-        // Act
-        await service.AddAsync(config);
-
-        // Assert
-        var result = await context.Configurations.SingleAsync(x => x.Name == ConfigurationKeys.HomeAssistantToken);
-        Assert.Equal("token123", result.Value);
-    }
-
-    [Fact]
-    public async Task AddAsync_AssignsNewGuid()
-    {
-        // Arrange
-        await using var context = CreateDbContext();
-        var service = CreateService(context);
-        var config = new ConfigurationCreateModel
-        {
-            Name = ConfigurationKeys.HomeAssistantUrl,
-            Value = "https://example.com"
-        };
-
-        // Act
-        await service.AddAsync(config);
-
-        // Assert
-        var result = await context.Configurations.SingleAsync(x => x.Name == ConfigurationKeys.HomeAssistantUrl);
-        Assert.NotEqual(Guid.Empty, result.Id);
-    }
-
-    [Fact]
     public async Task GetConfigurationAsync_WhenConfigurationExists_ReturnsReadModel()
     {
         // Arrange
@@ -307,6 +170,28 @@ public class ConfigurationServiceTests
         Assert.Equal(2, result.Count);
         Assert.Contains(result, r => r.Name == ConfigurationKeys.HomeAssistantUrl && r.Value == "https://example.com");
         Assert.Contains(result, r => r.Name == ConfigurationKeys.HomeAssistantToken && r.Value == "token123");
+    }
+
+    [Fact]
+    public async Task GetAllConfigurationsAsync_WhenMaskSensitiveValuesIsTrue_MasksToken()
+    {
+        // Arrange
+        await using var context = CreateDbContext();
+        var service = CreateService(context);
+
+        context.Configurations.AddRange(
+            new BatteryAdvisor.Core.Models.Database.ConfigurationModel { Id = Guid.NewGuid(), Name = ConfigurationKeys.HomeAssistantUrl, Value = "https://example.com" },
+            new BatteryAdvisor.Core.Models.Database.ConfigurationModel { Id = Guid.NewGuid(), Name = ConfigurationKeys.HomeAssistantToken, Value = "token123" }
+        );
+        await context.SaveChangesAsync();
+
+        // Act
+        var result = (await service.GetAllConfigurationsAsync(maskSensitiveValues: true)).ToList();
+
+        // Assert
+        Assert.Equal(2, result.Count);
+        Assert.Contains(result, r => r.Name == ConfigurationKeys.HomeAssistantUrl && r.Value == "https://example.com");
+        Assert.Contains(result, r => r.Name == ConfigurationKeys.HomeAssistantToken && r.Value == "****");
     }
 
     [Fact]
